@@ -11,8 +11,11 @@ public class Room
     private List<Vector2Int> entrances;
     private List<Vector2Int> exits;
 
+    public bool Discovered { get; private set; }
+
     public Room() {
         chunk = new int[size,size];
+        Discovered = true;
 
         // temp
         Vector2Int e1 = new Vector2Int(0,2);
