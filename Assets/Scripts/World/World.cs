@@ -4,20 +4,20 @@ using UnityEngine;
 
 public class World
 {
-    public int width = 4;
+    public int size = 4;
     public int regionSize = 4;
     private float fillerChance = 0.75f;
     private int fillerCount = 2;
 
     public int[,] region;  // why
-    private Region[] regions;
+    public Region[] regions;
 
     private int x;
     private int y;
 
     public World()
     {
-        region = new int[width, width];
+        region = new int[size, size];
         regions = new Region[5];
 
         x = 0;
@@ -114,7 +114,7 @@ public class World
                 break;
         }
 
-        if ((tempX < 0) || (tempY < 0) || (tempX >= width) || (tempY >= width) || (region[tempX,tempY] != 0)) {
+        if ((tempX < 0) || (tempY < 0) || (tempX >= size) || (tempY >= size) || (region[tempX,tempY] != 0)) {
             PlaceRegion(roomNum);
         } else {
             x = tempX;
