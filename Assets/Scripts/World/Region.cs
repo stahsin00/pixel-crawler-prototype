@@ -5,6 +5,7 @@ using UnityEngine;
 // idr wtf is going on here but ill fix it eventually i swear
 public class Region
 {
+    public int type;
     public int worldX;
     public int worldY;
 
@@ -24,8 +25,10 @@ public class Region
     public int collectibles;
     public int healthBoosts;
 
-    public Region(int worldX, int worldY, bool main = false, int collectibles = 0, int healthBoosts = 0)
+    public Region(int type, int worldX, int worldY, bool main = false, int collectibles = 0, int healthBoosts = 0)
     {
+        this.type = type;
+        
         this.worldX = worldX;
         this.worldY = worldY;
 

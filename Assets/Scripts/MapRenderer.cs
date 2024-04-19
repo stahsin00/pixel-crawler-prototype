@@ -20,7 +20,7 @@ public class MapRenderer : MonoBehaviour
     void DisplayMap()
     {
         int cellSize = 10;
-        int size = world.size * world.regionSize * cellSize;
+        int size = world.Size * world.RegionSize * cellSize;
 
         Texture2D texture = new Texture2D(size, size);
         texture.filterMode = FilterMode.Point;
@@ -35,14 +35,14 @@ public class MapRenderer : MonoBehaviour
                     continue;
                 }
 
-                int region = world.region[i / (world.regionSize * cellSize), j / (world.regionSize * cellSize)];
+                int region = world.RegionMap[i / (world.RegionSize * cellSize), j / (world.RegionSize * cellSize)];
 
                 if (region == 0) {
                     texture.SetPixel(i, j, Color.black);
                     continue;
                 }
 
-                int room = world.regions[region-1].room[i / (world.size * cellSize), j / (world.size * cellSize)];
+                int room = world.Regions[region-1].room[i / (world.Size * cellSize), j / (world.Size * cellSize)];
 
                 if (room == 0) {
                     texture.SetPixel(i, j, Color.black);
