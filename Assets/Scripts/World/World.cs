@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class World
@@ -8,7 +6,7 @@ public class World
     public int RegionSize { get; private set; }
 
     public int[,] RegionMap { get; private set; }
-    public Region[] Regions { get; private set; }
+    private Region[] regions;
 
     // TODO
     private float fillerChance = 0.75f;
@@ -20,7 +18,7 @@ public class World
         RegionSize = 4;
 
         RegionMap = new int[Size, Size];
-        Regions = new Region[5];
+        regions = new Region[3 + maxFillerCount];
 
         Initialize();
     }
@@ -33,78 +31,77 @@ public class World
 
     }
 
-    private void SetRegion(int x, int y, Region region) {
-        RegionMap[x, y] = region.type;
-        Regions[region.type-1] = region;
+    public Region GetRegion(int i) {
+        // TODO: input validation
+        return regions[i-1];
     }
 
-    // TODO
+    private void SetRegion(int x, int y, Region region) {
+        RegionMap[x, y] = region.type;
+        regions[region.type-1] = region;
+    }
+
+    private bool isValidMove(int x, int y, bool inclusive = false)
+    {
+        return (x >= 0) && (x < Size) && (y >= 0) && (y < Size) && (inclusive || RegionMap[x, y] == 0);
+    }
+
     private void PlaceRegions() {
         int x = 0;
         int y = Random.Range(0, 4);
 
         SetRegion(x,y,new Region(1,x,y,true));
 
-        PlaceRegion(2, ref x, ref y);
-        PlaceRegion(3, ref x, ref y);
+        PlaceRegion(2);
+        PlaceRegion(3);
 
-        int roomNum = 3;
-        for (int i = 0; i < 4; i++)
-        {
-            for (int j = 0; j < 4; j++)
-            {
-                
-                if (RegionMap[i,j] != 1 && RegionMap[i, j] != 2 && RegionMap[i, j] != 3)
-                {
-                    
-                    if (((i != 0 && RegionMap[i-1,j] > 0) || (i != 3 && RegionMap[i + 1, j] > 0) || (j != 0 && RegionMap[i, j - 1] > 0) || (j != 3 && RegionMap[i, j + 1] > 0)) && maxFillerCount > 0 && Random.value < fillerChance)
-                    {
-                        SetRegion(i,j,new Region(roomNum+1,i,j));
-                        roomNum++;
-                        maxFillerCount--;
-                    } 
-                } 
+        for (int i = 0; i < maxFillerCount; i++) {
+            if (Random.value < fillerChance) {
+                PlaceRegion(4 + i);
+            } else {
+                break;
             }
         }
     }
 
-    private void PlaceRegion(int roomNum, ref int x, ref int y) {
-        int tempX = x;
-        int tempY = y;
+    private void PlaceRegion(int regionNum) {
+        bool placed = false;
 
-        int direction = Random.Range(0, 4);
+        int pos = Random.Range(0, regionNum-1);
+        int offset = pos;
 
-        switch (direction)
-        {
-            case 0:
-                tempY++;
-                break;
-            case 1:
-                tempX++;
-                break;
-            case 2:
-                tempY--;
-                break;
-            default:
-                tempX--;
-                break;
-        }
+        do {
+            Debug.Log($"region: {regionNum}, offset: {offset}");
+            Region choice = regions[offset];
+            (int, int)[] moves = { (-1, 0), (1, 0), (0, -1), (0, 1) };
+            Utility.ShuffleArray(moves);
 
-        if ((tempX < 0) || (tempY < 0) || (tempX >= Size) || (tempY >= Size) || (RegionMap[tempX,tempY] != 0)) {
-            PlaceRegion(roomNum, ref x, ref y);
-        } else {
-            x = tempX;
-            y = tempY;
+            foreach ((int, int)move in moves) {
+                int x = choice.worldX + move.Item1;
+                int y = choice.worldY + move.Item2;
 
-            SetRegion(x,y,new Region(roomNum,x,y));
+                if (isValidMove(x, y)) {
+                    SetRegion(x,y,new Region(regionNum,x,y));
+                    placed = true;
+                    break;
+                }
+            }
+
+            offset = (offset + 1) % (regionNum-1);
+
+        } while (!placed && offset != pos);
+
+        // TODO : technically code should never get here...
+        if (!placed) {
+            Debug.LogError($"Unable to place region {regionNum}.");
         }
     }
 
     private void MakeConnections() {
-        for (int i = 0; i < Regions.Length; i++) {
-            for (int j = i + 1; j < Regions.Length; j++) {
-                Region region1 = Regions[i];
-                Region region2 = Regions[j];
+        for (int i = 0; i < regions.Length; i++) {
+            for (int j = i + 1; j < regions.Length; j++) {
+                Region region1 = regions[i];
+                Region region2 = regions[j];
                 if (region1 == null || region2 == null) {
                     break;
                 }
@@ -116,8 +113,8 @@ public class World
                         col = RegionSize-1;
                     }
 
-                    Regions[i].AddExit(new Vector2Int(row, col));
-                    Regions[j].AddEntrance(new Vector2Int(row, RegionSize-1 - col));
+                    regions[i].AddExit(new Vector2Int(row, col));
+                    regions[j].AddEntrance(new Vector2Int(row, RegionSize-1 - col));
                 } else if (region1.worldY == region2.worldY) {
                     int col = Random.Range(0, RegionSize);
                     int row = 0;
@@ -126,8 +123,8 @@ public class World
                         row = RegionSize-1;
                     }
 
-                    Regions[i].AddExit(new Vector2Int(row, col));
-                    Regions[j].AddEntrance(new Vector2Int(RegionSize-1 - row, col));
+                    regions[i].AddExit(new Vector2Int(row, col));
+                    regions[j].AddEntrance(new Vector2Int(RegionSize-1 - row, col));
                 }
             }
         }
@@ -135,8 +132,8 @@ public class World
 
     private void InitializeRegions() {
         for (int i = 0; i < 5; i++) {
-            if (Regions[i] != null) {
-                Regions[i].Initialize();
+            if (regions[i] != null) {
+                regions[i].Initialize();
             }
         }
     }

@@ -55,4 +55,15 @@ public static class Utility
 
         return path;
     }
+
+    public static void ShuffleArray<T>(T[] array) {
+        int n = array.Length;
+        for (int i = 0; i < n; i++)
+        {
+            int j = Random.Range(i, n);
+            T temp = array[j];
+            array[j] = array[i];
+            array[i] = temp;
+        }
+    }
 }
