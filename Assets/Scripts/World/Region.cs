@@ -48,6 +48,7 @@ public class Region
 
     public void AddEntrance(Vector2Int entrance)
     {
+        Debug.Log($"Region {type} adding entrance at ({entrance.x},{entrance.y})");
         if (this.entrance.x < size && this.entrance.y < size) {
             entrances.Add(entrance);
         } else {
@@ -58,6 +59,7 @@ public class Region
 
     public void AddExit(Vector2Int exit)
     {
+        Debug.Log($"Region {type} adding exit at ({exit.x},{exit.y})");
         exits.Add(exit);
     }
 

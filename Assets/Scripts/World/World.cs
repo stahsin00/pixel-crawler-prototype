@@ -26,7 +26,6 @@ public class World
     private void Initialize() {
         
         PlaceRegions();
-        MakeConnections();
         InitializeRegions();
 
     }
@@ -39,6 +38,7 @@ public class World
     private void SetRegion(int x, int y, Region region) {
         RegionMap[x, y] = region.type;
         regions[region.type-1] = region;
+        MakeConnections(region);
     }
 
     private bool isValidMove(int x, int y, bool inclusive = false)
@@ -48,7 +48,7 @@ public class World
 
     private void PlaceRegions() {
         int x = 0;
-        int y = Random.Range(0, 4);
+        int y = Random.Range(0, Size);
 
         SetRegion(x,y,new Region(1,x,y,true));
 
@@ -71,7 +71,6 @@ public class World
         int offset = pos;
 
         do {
-            Debug.Log($"region: {regionNum}, offset: {offset}");
             Region choice = regions[offset];
             (int, int)[] moves = { (-1, 0), (1, 0), (0, -1), (0, 1) };
             Utility.ShuffleArray(moves);
@@ -97,44 +96,59 @@ public class World
         }
     }
 
-    private void MakeConnections() {
-        for (int i = 0; i < regions.Length; i++) {
-            for (int j = i + 1; j < regions.Length; j++) {
-                Region region1 = regions[i];
-                Region region2 = regions[j];
-                if (region1 == null || region2 == null) {
-                    break;
-                }
-                if (region1.worldX == region2.worldX) {
-                    int row = Random.Range(0, RegionSize);
-                    int col = 0;
+    private void MakeConnections(Region region) {
+        (int, int)[] moves = { (-1, 0), (1, 0), (0, -1), (0, 1) };
 
-                    if (region1.worldY < region2.worldY) {
-                        col = RegionSize-1;
-                    }
+        foreach ((int, int)move in moves) {
+            int nextX = region.worldX + move.Item1;
+            int nextY = region.worldY + move.Item2;
 
-                    regions[i].AddExit(new Vector2Int(row, col));
-                    regions[j].AddEntrance(new Vector2Int(row, RegionSize-1 - col));
-                } else if (region1.worldY == region2.worldY) {
-                    int col = Random.Range(0, RegionSize);
-                    int row = 0;
+            if (isValidMove(nextX, nextY, true) && RegionMap[nextX,nextY] > 0) {
+                Region neighbor = GetRegion(RegionMap[nextX,nextY]);
 
-                    if (region1.worldX < region2.worldX) {
-                        row = RegionSize-1;
-                    }
+                int offset = Random.Range(0, RegionSize);
 
-                    regions[i].AddExit(new Vector2Int(row, col));
-                    regions[j].AddEntrance(new Vector2Int(RegionSize-1 - row, col));
+                (int row, int col, int rowNeighbor, int colNeighbor) = CalculateCoordinates(region, neighbor, offset);
+
+                if (region.type < neighbor.type) {
+
+                    region.AddExit(new Vector2Int(row, col));
+                    neighbor.AddEntrance(new Vector2Int(rowNeighbor, colNeighbor));
+
+                } else {
+
+                    region.AddEntrance(new Vector2Int(row, col));
+                    neighbor.AddExit(new Vector2Int(rowNeighbor, colNeighbor));
+
                 }
             }
         }
     }
 
+    private (int row, int col, int rowNeighbor, int colNeighbor) CalculateCoordinates(Region region, Region neighbor, int offset) {
+        if (region.worldX == neighbor.worldX) {
+
+            int col = (region.worldY < neighbor.worldY) ? RegionSize - 1 : 0;
+            return (offset, col, offset, RegionSize - 1 - col);
+
+        } else {
+
+            int row = (region.worldX < neighbor.worldX) ? RegionSize - 1 : 0;
+            return (row, offset, RegionSize - 1 - row, offset);
+
+        }
+    }
+
+
     private void InitializeRegions() {
-        for (int i = 0; i < 5; i++) {
-            if (regions[i] != null) {
-                regions[i].Initialize();
+        for (int i = 0; i < regions.Length; i++) {
+
+            if (regions[i] == null) {
+                return;
             }
+
+            regions[i].Initialize();
+
         }
     }
 }

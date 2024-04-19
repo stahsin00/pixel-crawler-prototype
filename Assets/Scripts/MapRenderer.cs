@@ -42,12 +42,12 @@ public class MapRenderer : MonoBehaviour
                     continue;
                 }
 
-                // int room = world.GetRegion(region).room[i / (world.Size * cellSize), j / (world.Size * cellSize)];
+                int room = world.GetRegion(region).room[i / (world.Size * cellSize), j / (world.Size * cellSize)];
 
-                // if (room == 0) {
-                //     texture.SetPixel(i, j, Color.black);
-                //     continue;
-                // }
+                if (room == 0) {
+                    texture.SetPixel(i, j, Color.black);
+                    continue;
+                }
 
                 switch (region) {
                     case 1:
