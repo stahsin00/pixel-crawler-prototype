@@ -34,7 +34,7 @@ public class Room
     }
 
     public void Initialize() {
-        chunk[entrance.x, entrance.y] = 1;
+        SetRoom(entrance.x, entrance.y);
 
         foreach (Vector2Int e in entrances) {
             FindPath(e);
@@ -43,19 +43,19 @@ public class Room
         foreach (Vector2Int e in exits) {
             FindPath(e);
         }
+    }
 
-        for (int i = 0; i < size; i++) {
-            for (int j = 0; j < size; j++) {
-                if (chunk[i,j] == 1) {
-                    if (j != 0 && chunk[i,j - 1] > 0 && j != 3 && chunk[i,j + 1] > 0) {
-                        chunk[i,j] = 4;
-                    } else if (j != 0 && chunk[i,j - 1] > 0) {
-                        chunk[i,j] = 2;
-                    } else if (j != 3 && chunk[i,j + 1] > 0) {
-                        chunk[i,j] = 3;
-                    }
-                }
-            }
+    private void SetRoom(int x, int y) {
+        chunk[x,y] = 1;
+
+        if (isValidMove(x,y-1,true) && chunk[x,y-1] > 0) {
+            chunk[x,y-1] = chunk[x,y-1] > 1 ? 4 : 2;
+            chunk[x,y] = 3;
+        }
+
+        if (isValidMove(x,y+1,true) && chunk[x,y+1] > 0) {
+            chunk[x,y+1] = chunk[x,y-1] > 1 ? 4 : 3;
+            chunk[x,y] = chunk[x,y] > 1 ? 4 : 2;
         }
     }
 
@@ -71,9 +71,9 @@ public class Room
 
         foreach (Vector2Int position in path)
         {
-            chunk[position.x,position.y] = 1;
+            SetRoom(position.x,position.y);
         }
 
-        chunk[source.x,source.y] = 1;
+        SetRoom(source.x,source.y);
     }
 }

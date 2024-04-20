@@ -6,11 +6,7 @@ public class WorldController
 {
     private static WorldController instance;
     public World CurrentWorld { get; private set; }
-
-    private WorldController() 
-    {
-        CurrentWorld = new World();
-    }
+    public Room CurrentRoom { get; private set; }
 
     public static WorldController Instance
     {
@@ -22,5 +18,18 @@ public class WorldController
             }
             return instance;
         }
+    }
+
+    private WorldController() 
+    {
+        CurrentWorld = new World();
+
+        // TODO: temp
+        CurrentRoom = new Room();
+        RenderRoom();
+    }
+
+    private void RenderRoom() {
+
     }
 }
