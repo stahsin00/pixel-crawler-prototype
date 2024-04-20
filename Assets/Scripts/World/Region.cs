@@ -48,7 +48,6 @@ public class Region
 
     public void AddEntrance(Vector2Int entrance)
     {
-        Debug.Log($"Region {type} adding entrance at ({entrance.x},{entrance.y})");
         if (this.entrance.x < size && this.entrance.y < size) {
             entrances.Add(entrance);
         } else {
@@ -59,7 +58,6 @@ public class Region
 
     public void AddExit(Vector2Int exit)
     {
-        Debug.Log($"Region {type} adding exit at ({exit.x},{exit.y})");
         exits.Add(exit);
     }
 
@@ -67,25 +65,94 @@ public class Region
     {
         MakeMainPath();
 
-        foreach (Vector2Int exit in exits)
-        {
-            FindPath(exit);
-        }
+        // foreach (Vector2Int exit in exits)
+        // {
+        //     FindPath(exit);
+        // }
 
-        for (int i = 0; i < collectibles; i++)
-        {
-            FindPath(0);
-        }
+        // for (int i = 0; i < collectibles; i++)
+        // {
+        //     FindPath(0);
+        // }
 
-        for (int i = 0; i < healthBoosts; i++)
-        {
-            FindPath(1);
-        }
+        // for (int i = 0; i < healthBoosts; i++)
+        // {
+        //     FindPath(1);
+        // }
     }
 
     private void MakeMainPath()
     {
-        MainPathBFS(entrance);
+        //MainPathBFS(entrance);
+        List<Vector2Int> path = MakeMainPathHelper(entrance, mainPath1.Length);
+
+        foreach (Vector2Int position in path)
+        {
+            //Debug.Log($"Region {type} Position: ({position.x},{position.y})");
+            room[position.x,position.y] = 1;
+        }
+
+        room[entrance.x,entrance.y] = 1;
+
+        // for (int i = 0; i < size; i++){
+        //     string row = "";
+        //     for (int j = 0; j < size; j++) {
+        //         row += $"{room[i,j]} ";
+        //     }
+        //     Debug.Log(row);
+        // }
+    }
+
+    private List<Vector2Int> MakeMainPathHelper(Vector2Int source, int max) {
+        int[,] dist = new int[size,size];
+        Vector2Int[,] prev = new Vector2Int[size,size];
+        PriorityQueue<Vector2Int> priority = new PriorityQueue<Vector2Int>();
+
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
+                dist[i,j] = size * size * 2;
+                prev[i,j] = new Vector2Int(size, size);
+                priority.Enqueue(new Vector2Int(i,j), dist[i,j]);
+            }
+        }
+
+        dist[source.x,source.y] = 0;
+        priority.UpdatePriority(source,0);
+
+        Vector2Int cur = source;
+
+        while (priority.Count > 0) {
+            cur = priority.Dequeue();
+
+            if (cur != source) {
+                Vector2Int prevNode = prev[cur.x,cur.y];
+                if (dist[prevNode.x,prevNode.y] == max - 1) {
+                    break;
+                }
+            }
+            
+            foreach (var (dx, dy) in new (int, int)[] { (-1, 0), (1, 0), (0, -1), (0, 1) }) {
+                var newX = cur.x + dx;
+                var newY = cur.y + dy;
+                if (isValidMove(newX, newY, true) && (dist[newX, newY] > dist[cur.x, cur.y] + 1)) {
+                    dist[newX, newY] = dist[cur.x, cur.y] + 1;
+                    prev[newX, newY] = cur;
+                    priority.UpdatePriority(new Vector2Int(newX, newY), dist[newX, newY]);
+                }
+            }
+        }
+
+        List<Vector2Int> path = new List<Vector2Int>();
+
+        while (cur != source)
+        {
+            path.Add(cur);
+            cur = prev[cur.x,cur.y];
+        }
+
+        path.Reverse();
+
+        return path;
     }
 
     private bool isValidMove(int x, int y, bool inclusive = false)
