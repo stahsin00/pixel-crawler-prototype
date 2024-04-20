@@ -4,29 +4,34 @@ using UnityEngine;
 public class Region
 {
     public int Type { get; private set; }
-    public int worldX;
-    public int worldY;
+    public int WorldX { get; private set; }
+    public int WorldY { get; private set; }
 
-    public int size = 4;
-    public int[,] room;
+    public int[,] RoomMap { get; private set; }
+
+    private int size;
 
     private Vector2Int entrance;
     private List<Vector2Int> entrances;
     private List<Vector2Int> exits;
 
-    private int[] mainPath = { 1, 2, 2, 3, 2, 4, 5, 6, 7 };
-
+    // TODO
     public int collectibles;
     public int healthBoosts;
 
-    public Region(int type, int worldX, int worldY, bool main = false, int collectibles = 0, int healthBoosts = 0)
-    {
-        this.Type = type;
-        
-        this.worldX = worldX;
-        this.worldY = worldY;
+    private int[] mainPath = { 1, 2, 2, 3, 2, 4, 5, 6, 7 };
 
-        room = new int[size, size];
+    public Region(int type, int worldX, int worldY, int size, bool main = false, int collectibles = 0, int healthBoosts = 0)
+    {
+        Type = type;
+        
+        WorldX = worldX;
+        WorldY = worldY;
+
+        this.size = size;
+
+        RoomMap = new int[size, size];
+
         this.collectibles = collectibles;
         this.healthBoosts = healthBoosts;
 
@@ -46,7 +51,7 @@ public class Region
             entrances.Add(entrance);
         } else {
             this.entrance = entrance;
-            room[entrance.x, entrance.y] = 1;
+            RoomMap[entrance.x, entrance.y] = 1;
         }
     }
 
@@ -83,10 +88,11 @@ public class Region
     private void MakePath()
     {
         bool[,] visited = new bool[size, size];
-        MakePathDFS(entrance.x,entrance.y,visited,9);
+        MakePathDFS(entrance.x,entrance.y,visited,mainPath.Length);
 
     }
 
+    // TODO: change to stack implementation
     private bool MakePathDFS(int x, int y, bool[,] visited, int dist) {
         if (dist == 0) {
             return true;
@@ -111,7 +117,7 @@ public class Region
 
             bool found = MakePathDFS(nextX, nextY, visited, dist-1);
             if (found) {
-                room[x,y] = 1;
+                RoomMap[x,y] = mainPath[mainPath.Length-dist];
                 return true;
             }
         }
@@ -122,18 +128,18 @@ public class Region
 
     private bool isValidMove(int x, int y, bool inclusive = false)
     {
-        return (x >= 0) && (x < size) && (y >= 0) && (y < size) && (inclusive || room[x, y] == 0);
+        return (x >= 0) && (x < size) && (y >= 0) && (y < size) && (inclusive || RoomMap[x, y] == 0);
     }
 
     private void FindPath(Vector2Int source, bool isEntrance = false) 
     {
-        List<Vector2Int> path = Utility.FindPath(size, source, isValidMove, (int x, int y) => { return room[x, y] > 0; });
+        List<Vector2Int> path = Utility.FindPath(size, source, isValidMove, (int x, int y) => { return RoomMap[x, y] > 0; });
 
         foreach (Vector2Int position in path)
         {
-            room[position.x,position.y] = 2;
+            RoomMap[position.x,position.y] = 2;
         }
 
-        room[source.x,source.y] = isEntrance ? 1 : 8;
+        RoomMap[source.x,source.y] = isEntrance ? 1 : 8;
     }
 }

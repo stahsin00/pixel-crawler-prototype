@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 using UnityEngine.UI;
@@ -42,8 +40,8 @@ public class MapRenderer : MonoBehaviour
                     continue;
                 }
 
-                int room = world.GetRegion(region).room[i / cellSize % world.RegionSize, 
-                                                        j / cellSize % world.RegionSize];
+                int room = world.GetRegion(region).RoomMap[i / cellSize % world.RegionSize, 
+                                                           j / cellSize % world.RegionSize];
 
                 if (room == 0) {
                     texture.SetPixel(i, j, Color.black);

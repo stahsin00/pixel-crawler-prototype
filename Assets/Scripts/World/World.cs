@@ -50,7 +50,7 @@ public class World
         int x = 0;
         int y = Random.Range(0, Size);
 
-        SetRegion(x,y,new Region(1,x,y,true));
+        SetRegion(x,y,new Region(1,x,y,RegionSize,true));
 
         PlaceRegion(2);
         PlaceRegion(3);
@@ -76,11 +76,11 @@ public class World
             Utility.ShuffleArray(moves);
 
             foreach ((int, int)move in moves) {
-                int x = choice.worldX + move.Item1;
-                int y = choice.worldY + move.Item2;
+                int x = choice.WorldX + move.Item1;
+                int y = choice.WorldY + move.Item2;
 
                 if (isValidMove(x, y)) {
-                    SetRegion(x,y,new Region(regionNum,x,y));
+                    SetRegion(x,y,new Region(regionNum,x,y,RegionSize));
                     placed = true;
                     break;
                 }
@@ -100,8 +100,8 @@ public class World
         (int, int)[] moves = { (-1, 0), (1, 0), (0, -1), (0, 1) };
 
         foreach ((int, int)move in moves) {
-            int nextX = region.worldX + move.Item1;
-            int nextY = region.worldY + move.Item2;
+            int nextX = region.WorldX + move.Item1;
+            int nextY = region.WorldY + move.Item2;
 
             if (isValidMove(nextX, nextY, true) && RegionMap[nextX,nextY] > 0) {
                 Region neighbor = GetRegion(RegionMap[nextX,nextY]);
@@ -126,14 +126,14 @@ public class World
     }
 
     private (int row, int col, int rowNeighbor, int colNeighbor) CalculateCoordinates(Region region, Region neighbor, int offset) {
-        if (region.worldX == neighbor.worldX) {
+        if (region.WorldX == neighbor.WorldX) {
 
-            int col = (region.worldY < neighbor.worldY) ? RegionSize - 1 : 0;
+            int col = (region.WorldY < neighbor.WorldY) ? RegionSize - 1 : 0;
             return (offset, col, offset, RegionSize - 1 - col);
 
         } else {
 
-            int row = (region.worldX < neighbor.worldX) ? RegionSize - 1 : 0;
+            int row = (region.WorldX < neighbor.WorldX) ? RegionSize - 1 : 0;
             return (row, offset, RegionSize - 1 - row, offset);
 
         }
