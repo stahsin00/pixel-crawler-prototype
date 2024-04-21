@@ -5,13 +5,14 @@ using UnityEngine;
 public class Chunk
 {
     private int type;
-    private int size = 5;
+    private int size;
     private ChunkTemplate template;
 
     public int[,] Layout { get; private set; }
 
-    public Chunk() {
+    public Chunk(int size) {
         type = 0;
+        this.size = size;
         
         Layout = new int[size, size];
     }
@@ -29,5 +30,9 @@ public class Chunk
                 Layout[i, j] = template.layout.items[i].items[j];
             }
         }
+    }
+
+    public int this[int row, int col] {
+        get { return Layout[row, col]; }
     }
 }

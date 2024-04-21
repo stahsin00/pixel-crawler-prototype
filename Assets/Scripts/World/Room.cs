@@ -5,6 +5,7 @@ using UnityEngine;
 public class Room
 {
     public int size = 4;
+    public int chunkSize = 5;
     public int[,] chunkMap;
     public Chunk[,] chunks;
 
@@ -58,7 +59,7 @@ public class Room
 
     private void SetRoom(int x, int y) {
         chunkMap[x,y] = 1;
-        chunks[x,y] = new Chunk();
+        chunks[x,y] = new Chunk(chunkSize);
         chunks[x,y].SetType(1);
 
         if (isValidMove(x,y-1,true) && chunkMap[x,y-1] > 0) {
@@ -94,5 +95,15 @@ public class Room
         }
 
         SetRoom(source.x,source.y);
+    }
+
+    public int this[int row, int col] {
+        get 
+        { 
+            if (chunks[row / size, col / size] != null)
+                return chunks[row / size, col / size][row % size, col % size]; 
+            else 
+                return 1;
+        }
     }
 }
