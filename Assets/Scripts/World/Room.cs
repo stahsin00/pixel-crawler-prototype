@@ -5,7 +5,8 @@ using UnityEngine;
 public class Room
 {
     public int size = 4;
-    public int[,] chunk;
+    public int[,] chunkMap;
+    public Chunk[,] chunks;
 
     private Vector2Int entrance;
     private List<Vector2Int> entrances;
@@ -14,7 +15,9 @@ public class Room
     public bool Discovered { get; private set; }
 
     public Room() {
-        chunk = new int[size,size];
+        chunkMap = new int[size,size];
+        chunks = new Chunk[size,size];
+
         Discovered = true;
 
         // temp
@@ -43,31 +46,47 @@ public class Room
         foreach (Vector2Int e in exits) {
             FindPath(e);
         }
+
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
+                if (chunks[i,j] != null) {
+                    chunks[i,j].Initialize();
+                }
+            }
+        }
     }
 
     private void SetRoom(int x, int y) {
-        chunk[x,y] = 1;
+        chunkMap[x,y] = 1;
+        chunks[x,y] = new Chunk();
+        chunks[x,y].SetType(1);
 
-        if (isValidMove(x,y-1,true) && chunk[x,y-1] > 0) {
-            chunk[x,y-1] = chunk[x,y-1] > 1 ? 4 : 2;
-            chunk[x,y] = 3;
+        if (isValidMove(x,y-1,true) && chunkMap[x,y-1] > 0) {
+            chunkMap[x,y-1] = chunkMap[x,y-1] > 1 ? 4 : 2;
+            chunks[x,y-1].SetType(chunkMap[x,y-1] > 1 ? 4 : 2);
+
+            chunkMap[x,y] = 3;
+            chunks[x,y].SetType(3);
         }
 
-        if (isValidMove(x,y+1,true) && chunk[x,y+1] > 0) {
-            chunk[x,y+1] = chunk[x,y-1] > 1 ? 4 : 3;
-            chunk[x,y] = chunk[x,y] > 1 ? 4 : 2;
+        if (isValidMove(x,y+1,true) && chunkMap[x,y+1] > 0) {
+            chunkMap[x,y+1] = chunkMap[x,y-1] > 1 ? 4 : 3;
+            chunks[x,y+1].SetType(chunkMap[x,y-1] > 1 ? 4 : 3);
+
+            chunkMap[x,y] = chunkMap[x,y] > 1 ? 4 : 2;
+            chunks[x,y].SetType(chunkMap[x,y] > 1 ? 4 : 2);
         }
     }
 
     private bool isValidMove(int x, int y, bool inclusive = false)
     {
-        return (x >= 0) && (x < size) && (y >= 0) && (y < size) && (inclusive || chunk[x, y] == 0);
+        return (x >= 0) && (x < size) && (y >= 0) && (y < size) && (inclusive || chunkMap[x, y] == 0);
     }
 
     private void FindPath(Vector2Int source) 
     {
         
-        List<Vector2Int> path = Utility.FindPath(size, source, isValidMove, (int x, int y) => { return chunk[x, y] > 0; });
+        List<Vector2Int> path = Utility.FindPath(size, source, isValidMove, (int x, int y) => { return chunkMap[x, y] > 0; });
 
         foreach (Vector2Int position in path)
         {

@@ -21,6 +21,7 @@ public class ChunkTemplateManager : MonoBehaviour
         else
         {
             instance = this;
+            LoadChunkTemplates();
             DontDestroyOnLoad(gameObject);
         }
     }
@@ -43,5 +44,31 @@ public class ChunkTemplateManager : MonoBehaviour
                 return allSides[index];
         }
 
+    }
+
+    private void LoadChunkTemplates()
+    {
+        string json = Resources.Load<TextAsset>("templates").text;
+        ChunkTemplate[] data = JsonUtility.FromJson<Wrapper<ChunkTemplate>>(json).items;
+
+        foreach (ChunkTemplate chunkTemplate in data) {
+            int type = chunkTemplate.type;
+            Debug.Log(chunkTemplate.layout);
+
+            switch (type) {
+                case 1:
+                    rightLeft.Add(chunkTemplate);
+                    break;
+                case 2:
+                    rightLeftBottom.Add(chunkTemplate);
+                    break;
+                case 3:
+                    rightLeftTop.Add(chunkTemplate);
+                    break;
+                default:
+                    allSides.Add(chunkTemplate);
+                    break;
+            }
+        }
     }
 }
