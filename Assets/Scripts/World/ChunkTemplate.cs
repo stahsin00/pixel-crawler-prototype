@@ -5,5 +5,5 @@ using UnityEngine;
 public class ChunkTemplate
 {
     public int type;
-    public List<List<int>> layout;
+    public Wrapper<Wrapper<int>> layout;
 }

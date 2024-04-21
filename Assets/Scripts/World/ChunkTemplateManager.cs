@@ -53,7 +53,6 @@ public class ChunkTemplateManager : MonoBehaviour
 
         foreach (ChunkTemplate chunkTemplate in data) {
             int type = chunkTemplate.type;
-            Debug.Log(chunkTemplate.layout);
 
             switch (type) {
                 case 1:
