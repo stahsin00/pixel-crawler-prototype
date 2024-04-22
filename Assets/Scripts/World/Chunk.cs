@@ -22,7 +22,7 @@ public class Chunk
     }
 
     public void Initialize() {
-        template = ChunkTemplateManager.Instance.GetRandomChunkTemplate(type);
+        template = WorldController.Instance.TemplateManager.GetRandomChunkTemplate(type);
 
         // TODO
         for (int i = 0; i < size; i++) {

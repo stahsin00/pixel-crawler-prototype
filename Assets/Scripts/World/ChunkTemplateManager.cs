@@ -1,29 +1,24 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ChunkTemplateManager : MonoBehaviour
+public class ChunkTemplateManager
 {
-    private static ChunkTemplateManager instance;
-    public static ChunkTemplateManager Instance { get { return instance; } }
-
     public List<ChunkTemplate> rightLeft;
     public List<ChunkTemplate> rightLeftBottom;
     public List<ChunkTemplate> rightLeftTop;
     public List<ChunkTemplate> allSides;
 
-    private void Awake()
-    {
-        if (instance != null && instance != this)
-        {
-            Destroy(gameObject);
-            return;
-        }
-        else
-        {
-            instance = this;
-            LoadChunkTemplates();
-            DontDestroyOnLoad(gameObject);
-        }
+    public bool isLoading = true;
+
+    public ChunkTemplateManager() {
+        rightLeft = new List<ChunkTemplate>();
+        rightLeftBottom = new List<ChunkTemplate>();
+        rightLeftTop = new List<ChunkTemplate>();
+        allSides = new List<ChunkTemplate>();
+
+        isLoading = true;
+        LoadChunkTemplates();
+        isLoading = false;
     }
 
     public ChunkTemplate GetRandomChunkTemplate(int type)

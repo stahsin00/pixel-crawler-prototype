@@ -100,8 +100,8 @@ public class Room
     public int this[int row, int col] {
         get 
         { 
-            if (chunks[row / size, col / size] != null)
-                return chunks[row / size, col / size][row % size, col % size]; 
+            if (chunks[row / chunkSize, col / chunkSize] != null)
+                return chunks[row / chunkSize, col / chunkSize][row % chunkSize, col % chunkSize]; 
             else 
                 return 1;
         }

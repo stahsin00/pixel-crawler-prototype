@@ -1,35 +1,58 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Tilemaps;
 
-public class WorldController
+public class WorldController : MonoBehaviour
 {
+    public Tilemap tilemap;
+    public Tile tile;
+
     private static WorldController instance;
+    public static WorldController Instance { get { return instance; } }
+
     public World CurrentWorld { get; private set; }
     public Room CurrentRoom { get; private set; }
 
-    public static WorldController Instance
+    public ChunkTemplateManager TemplateManager { get; private set; }
+
+    private void Awake()
     {
-        get
+        if (instance != null && instance != this)
         {
-            if (instance == null)
-            {
-                instance = new WorldController();
-            }
-            return instance;
+            Destroy(gameObject);
+            return;
+        }
+        else
+        {
+            instance = this;
+            DontDestroyOnLoad(gameObject);
+
+            CurrentWorld = new World();
+
+            TemplateManager = new ChunkTemplateManager();
+            StartCoroutine(WaitForTemplates());
         }
     }
 
-    private WorldController() 
-    {
-        CurrentWorld = new World();
+    private void RenderRoom() {
+        for (int x = 0; x < CurrentRoom.size * CurrentRoom.chunkSize - 1; x++)
+        {
+            for (int y = 0; y < CurrentRoom.size * CurrentRoom.chunkSize - 1; y++)
+            {
+                if (CurrentRoom[x,y] == 1)
+                    tilemap.SetTile(new Vector3Int(x, y, 0), tile);
+            }
+        }
+    }
+
+    IEnumerator WaitForTemplates() {
+        while (TemplateManager.isLoading) {
+            yield return null;
+        }
 
         // TODO: temp
         CurrentRoom = new Room();
         RenderRoom();
-    }
-
-    private void RenderRoom() {
-
     }
 }
