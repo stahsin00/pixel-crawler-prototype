@@ -63,19 +63,19 @@ public class Room
         chunks[x,y].SetType(1);
 
         if (isValidMove(x,y-1,true) && chunkMap[x,y-1] > 0) {
-            chunkMap[x,y-1] = chunkMap[x,y-1] > 1 ? 4 : 2;
-            chunks[x,y-1].SetType(chunkMap[x,y-1] > 1 ? 4 : 2);
+            chunkMap[x,y-1] = chunkMap[x,y-1] == 3 ? 4 : 2;
+            chunks[x,y-1].SetType(chunkMap[x,y-1]);
 
-            chunkMap[x,y] = 3;
-            chunks[x,y].SetType(3);
+            chunkMap[x,y] = chunkMap[x,y] == 2 ? 4 : 3;
+            chunks[x,y].SetType(chunkMap[x,y]);
         }
 
         if (isValidMove(x,y+1,true) && chunkMap[x,y+1] > 0) {
-            chunkMap[x,y+1] = chunkMap[x,y-1] > 1 ? 4 : 3;
-            chunks[x,y+1].SetType(chunkMap[x,y-1] > 1 ? 4 : 3);
+            chunkMap[x,y+1] = chunkMap[x,y-1] == 2 ? 4 : 3;
+            chunks[x,y+1].SetType(chunkMap[x,y-1]);
 
-            chunkMap[x,y] = chunkMap[x,y] > 1 ? 4 : 2;
-            chunks[x,y].SetType(chunkMap[x,y] > 1 ? 4 : 2);
+            chunkMap[x,y] = chunkMap[x,y] == 3 ? 4 : 2;
+            chunks[x,y].SetType(chunkMap[x,y]);
         }
     }
 

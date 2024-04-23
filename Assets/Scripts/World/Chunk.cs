@@ -27,7 +27,7 @@ public class Chunk
         // TODO
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
-                Layout[i, j] = template.layout.items[i].items[j];
+                Layout[i, j] = template.layout.items[j].items[i];
             }
         }
     }
