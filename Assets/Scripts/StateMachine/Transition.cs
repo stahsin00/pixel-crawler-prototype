@@ -1,27 +1,13 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
 public abstract class Transition
 {
     protected Entity entity;
-    protected StateMachine stateMachine;
 
-    public Transition(Entity entity, StateMachine stateMachine)
+    public Transition(Entity entity)
     {
         this.entity = entity;
-        this.stateMachine = stateMachine;
     }
 
-    public virtual bool ShouldTransition()
-    {
-        // TODO : temp
-        return false;
-    }
+    public abstract bool ShouldTransition();
 
-    public virtual State NextState()
-    {
-        // TODO : temp
-        return entity.idleState;
-    }
+    public abstract State NextState();
 }
