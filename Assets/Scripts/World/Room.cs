@@ -48,6 +48,8 @@ public class Room
             FindPath(e);
         }
 
+        chunks[entrance.x,entrance.y].SetSpawn();
+
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
                 if (chunks[i,j] != null) {

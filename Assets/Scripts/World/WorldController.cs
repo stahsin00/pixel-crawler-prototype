@@ -8,6 +8,8 @@ public class WorldController : MonoBehaviour
     public Tilemap tilemap;
     public Tile tile;
 
+    public GameObject player;
+
     private static WorldController instance;
     public static WorldController Instance { get { return instance; } }
 
@@ -40,8 +42,11 @@ public class WorldController : MonoBehaviour
         {
             for (int y = 0; y < CurrentRoom.size * CurrentRoom.chunkSize - 1; y++)
             {
-                if (CurrentRoom[x,y] == 1)
+                if (CurrentRoom[x,y] == 1) {
                     tilemap.SetTile(new Vector3Int(x, y, 0), tile);
+                } else if (CurrentRoom[x,y] == 2) {
+                    Instantiate(player, new Vector3(x + tilemap.cellSize.x / 2, y + tilemap.cellSize.y / 2, 0), Quaternion.identity);
+                }
             }
         }
     }
