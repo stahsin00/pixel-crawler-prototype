@@ -27,5 +27,6 @@ public class InputHandler : MonoBehaviour
         } 
 
         InputX = Input.GetAxisRaw("Horizontal");
+        player.movement.Flip(InputX);
     }
 }

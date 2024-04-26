@@ -26,13 +26,6 @@ public abstract class State
         transitions.Add(transition);
     }
 
-    public void PrintTransitions() {
-        foreach (var transition in transitions)
-        {
-            Debug.Log("PrintTransitions: " + transition.GetType().Name);
-        }
-    }
-
     public virtual void Enter()
     {
         startTime = Time.time;
@@ -45,8 +38,7 @@ public abstract class State
         {
             if (transition.ShouldTransition())
             {
-                Debug.Log(transition.NextState().GetType().Name);
-                //stateMachine.ChangeState(transition.NextState());
+                stateMachine.ChangeState(transition.NextState());
                 break;
             }
         }
