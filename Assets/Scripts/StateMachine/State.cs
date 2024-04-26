@@ -43,7 +43,6 @@ public abstract class State
         // TODO : prioritize transitions?
         foreach (Transition transition in transitions)
         {
-            //Debug.Log("Update: " + transition.GetType().Name);
             if (transition.ShouldTransition())
             {
                 Debug.Log(transition.NextState().GetType().Name);
