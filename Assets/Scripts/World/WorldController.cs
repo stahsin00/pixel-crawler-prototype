@@ -9,6 +9,7 @@ public class WorldController : MonoBehaviour
     public Tile tile;
 
     public GameObject player;
+    private GameObject playerInstance;
 
     private static WorldController instance;
     public static WorldController Instance { get { return instance; } }
@@ -17,6 +18,12 @@ public class WorldController : MonoBehaviour
     public Room CurrentRoom { get; private set; }
 
     public ChunkTemplateManager TemplateManager { get; private set; }
+
+    public bool isLoading {get; private set; } = true;
+
+    public GameObject GetPlayer() {
+        return playerInstance;
+    }
 
     private void Awake()
     {
@@ -45,10 +52,13 @@ public class WorldController : MonoBehaviour
                 if (CurrentRoom[x,y] == 1) {
                     tilemap.SetTile(new Vector3Int(x, y, 0), tile);
                 } else if (CurrentRoom[x,y] == 2) {
-                    Instantiate(player, new Vector3(x + tilemap.cellSize.x / 2, y + tilemap.cellSize.y / 2, 0), Quaternion.identity);
+                    playerInstance = Instantiate(player, new Vector3(x + tilemap.cellSize.x / 2, y + tilemap.cellSize.y / 2, 0), Quaternion.identity);
                 }
             }
         }
+
+        // TODO: temp
+        isLoading = false;
     }
 
     IEnumerator WaitForTemplates() {
