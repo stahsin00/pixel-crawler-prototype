@@ -11,6 +11,14 @@ public class EntityFallTransition : Transition
 
     public override bool ShouldTransition()
     {
-        return !entity.collisionSenses.IsGrounded() && entity.movement.currentVelocity.y < 0.01f && entity.stateMachine.CurrentState != entity.inAirState;
+        if (entity.stateMachine.CurrentState == entity.inAirState) {
+            return false;
+        }
+
+        if (!entity.collisionSenses.IsGrounded() && (entity.movement.currentVelocity.y < 0.01f || entity.collisionSenses.HasCollided)) {
+            return true;
+        }
+
+        return false;
     }
 }

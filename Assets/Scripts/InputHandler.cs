@@ -7,6 +7,7 @@ public class InputHandler : MonoBehaviour
     Player player;
 
     public float InputX { get; private set; }
+    public bool JumpInput { get; private set; } = false;
 
     private void Awake()
     {
@@ -22,11 +23,15 @@ public class InputHandler : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            player.stateMachine.ChangeState(player.jumpState);
+            JumpInput = true;
             return;
         } 
 
         InputX = Input.GetAxisRaw("Horizontal");
         player.movement.Flip(InputX);
+    }
+
+    public void UseJumpInput() {
+        JumpInput = false;
     }
 }

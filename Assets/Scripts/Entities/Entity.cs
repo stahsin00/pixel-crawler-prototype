@@ -14,7 +14,6 @@ public abstract class Entity : MonoBehaviour
     // States
     public IdleState idleState;
     public WalkState walkState;
-    public JumpState jumpState;
     public InAirState inAirState;
 
     // Stats
@@ -29,7 +28,6 @@ public abstract class Entity : MonoBehaviour
 
         idleState = new IdleState(this, stateMachine);
         walkState = new WalkState(this, stateMachine);
-        jumpState = new JumpState(this, stateMachine);
         inAirState = new InAirState(this, stateMachine);
     }
 
