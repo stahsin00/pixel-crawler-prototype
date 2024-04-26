@@ -7,7 +7,7 @@ public abstract class State
     protected StateMachine stateMachine;
     protected List<Transition> transitions;
 
-    protected float startTime;
+    public float startTime;
 
     public State(Entity entity, StateMachine stateMachine)
     {

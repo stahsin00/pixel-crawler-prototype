@@ -14,6 +14,7 @@ public class Player : Entity
 
         idleState.AddTransition(new PlayerIdleTransition(this));
         walkState.AddTransition(new PlayerMoveTransition(this));
+        jumpState.AddTransition(new PlayerJumpFallTransition(this));
 
         PlayerJumpTransition playerJumpTransition= new PlayerJumpTransition(this);
         idleState.AddTransition(playerJumpTransition);

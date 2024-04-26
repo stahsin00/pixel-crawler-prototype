@@ -1,6 +1,8 @@
-public class EntityFallTransition : Transition
+using UnityEngine;
+
+public class PlayerJumpFallTransition : Transition
 {
-    public EntityFallTransition(Entity entity) : base(entity)
+    public PlayerJumpFallTransition(Entity entity) : base(entity)
     {
     }
 
@@ -15,7 +17,7 @@ public class EntityFallTransition : Transition
             return false;
         }
 
-        if (!entity.collisionSenses.IsGrounded() && entity.movement.currentVelocity.y < 0.01f) {
+        if (entity.collisionSenses.HasCollided && Time.time - entity.stateMachine.CurrentState.startTime > 0.1f) {
             return true;
         }
 
