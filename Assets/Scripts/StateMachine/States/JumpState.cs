@@ -1,7 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
 public class JumpState : State
 {
     Movement movement;
@@ -17,15 +13,5 @@ public class JumpState : State
 		base.Enter();
 
 		movement.SetVelocityY(speed);
-	}
-
-	public override void Update()
-	{
-		base.Update();
-		
-		if (movement.currentVelocity.y < 0.01f)
-        {
-			stateMachine.ChangeState(entity.inAirState);
-        }
 	}
 }

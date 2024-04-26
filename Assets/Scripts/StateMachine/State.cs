@@ -15,11 +15,22 @@ public abstract class State
         this.stateMachine = stateMachine;
 
         transitions = new List<Transition>();
+
+        // TODO : temp
+        AddTransition(new EntityFallTransition(entity));
+        AddTransition(new EntityLandTransition(entity));
     }
 
     public void AddTransition(Transition transition)
     {
         transitions.Add(transition);
+    }
+
+    public void PrintTransitions() {
+        foreach (var transition in transitions)
+        {
+            Debug.Log("PrintTransitions: " + transition.GetType().Name);
+        }
     }
 
     public virtual void Enter()
@@ -30,11 +41,13 @@ public abstract class State
     public virtual void Update()
     {
         // TODO : prioritize transitions?
-        foreach (var transition in transitions)
+        foreach (Transition transition in transitions)
         {
+            //Debug.Log("Update: " + transition.GetType().Name);
             if (transition.ShouldTransition())
             {
-                stateMachine.ChangeState(transition.NextState());
+                Debug.Log(transition.NextState().GetType().Name);
+                //stateMachine.ChangeState(transition.NextState());
                 break;
             }
         }

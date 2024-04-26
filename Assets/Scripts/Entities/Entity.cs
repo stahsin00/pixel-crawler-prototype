@@ -33,7 +33,7 @@ public abstract class Entity : MonoBehaviour
         inAirState = new InAirState(this, stateMachine);
     }
 
-    void Update()
+    protected virtual void Update()
     {
         stateMachine.CurrentState.Update();
     }

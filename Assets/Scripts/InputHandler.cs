@@ -6,6 +6,8 @@ public class InputHandler : MonoBehaviour
 {
     Player player;
 
+    public float InputX { get; private set; }
+
     private void Awake()
     {
         player = GetComponent<Player>();
@@ -24,19 +26,6 @@ public class InputHandler : MonoBehaviour
             return;
         } 
 
-        float horizontalInput = Input.GetAxisRaw("Horizontal");
-
-        if (Mathf.Abs(horizontalInput) > 0.1f)
-        {
-            player.stateMachine.ChangeState(player.walkState);
-            player.movement.Flip(horizontalInput);
-        }
-        else if (player.collisionSenses.IsGrounded() && player.movement.currentVelocity.y < 0.01f && player.stateMachine.CurrentState != player.idleState)
-        {
-            player.stateMachine.ChangeState(player.idleState);
-        } else if (!player.collisionSenses.IsGrounded() && player.movement.currentVelocity.y < 0.01f &&  player.stateMachine.CurrentState != player.inAirState)
-        {
-            player.stateMachine.ChangeState(player.inAirState);
-        }
+        InputX = Input.GetAxisRaw("Horizontal");
     }
 }
