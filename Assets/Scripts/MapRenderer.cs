@@ -12,6 +12,7 @@ public class MapRenderer : MonoBehaviour
     {
         world = WorldController.Instance.CurrentWorld;
         DisplayMap();
+        ToggleMap();
     }
 
     // temp
@@ -70,5 +71,10 @@ public class MapRenderer : MonoBehaviour
 
         byte[] bytes = texture.EncodeToPNG();
         File.WriteAllBytes(Application.dataPath + "/TempPreview.png", bytes);
+    }
+
+    public void ToggleMap()
+    {
+        image.enabled = !image.enabled;
     }
 }
