@@ -12,6 +12,8 @@ public class PatrolState : SuperState
         marchState.AddTransition(new PatrolLookAroundTransition(entity, this));
     }
 
+    
+
     protected override State GetInitialState()
     {
         return lookAroundState;
