@@ -11,6 +11,9 @@ public class WorldController : MonoBehaviour
     public GameObject player;
     private GameObject playerInstance;
 
+    public GameObject enemy;
+    private GameObject enemyInstance;
+
     private static WorldController instance;
     public static WorldController Instance { get { return instance; } }
 
@@ -53,6 +56,8 @@ public class WorldController : MonoBehaviour
                     tilemap.SetTile(new Vector3Int(x, y, 0), tile);
                 } else if (CurrentRoom[x,y] == 2) {
                     playerInstance = Instantiate(player, new Vector3(x + tilemap.cellSize.x / 2, y + tilemap.cellSize.y / 2, 0), Quaternion.identity);
+                } else if (CurrentRoom[x,y] == 3) {
+                    enemyInstance = Instantiate(enemy, new Vector3(x + tilemap.cellSize.x / 2, y + tilemap.cellSize.y / 2, 0), Quaternion.identity);
                 }
             }
         }

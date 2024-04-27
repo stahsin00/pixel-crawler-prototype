@@ -1,20 +1,20 @@
 using UnityEngine;
 
-public class PatrolMarchTransition : Transition
+public class PatrolMarchTransition : SubStateTransiton
 {
-    public PatrolMarchTransition(Entity entity) : base(entity)
+    public PatrolMarchTransition(Entity entity, SuperState superState) : base(entity, superState)
     {
     }
 
     public override State NextState()
     {
-        PatrolState superState = entity.stateMachine.CurrentState as PatrolState;
-        return superState.marchState;
+        PatrolState patrolState = superState as PatrolState;
+        return patrolState.marchState;
     }
 
     public override bool ShouldTransition()
     {
-        PatrolState superState = entity.stateMachine.CurrentState as PatrolState;
-        return Time.time - superState.subStateMachine.CurrentState.startTime > 1f;
+        PatrolState patrolState = superState as PatrolState;
+        return Time.time - patrolState.subStateMachine.CurrentState.startTime > 1f;
     }
 }

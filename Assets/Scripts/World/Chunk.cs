@@ -10,6 +10,7 @@ public class Chunk
 
     private bool isSpawn;
     private Vector2Int spawnPoint;
+    private Vector2Int enemySpawnPoint;
 
     public int[,] Layout { get; private set; }
 
@@ -19,6 +20,7 @@ public class Chunk
 
         isSpawn = spawn;
         spawnPoint = new Vector2Int(size,size);
+        enemySpawnPoint = new Vector2Int(size,size);
         
         Layout = new int[size, size];
     }
@@ -42,6 +44,10 @@ public class Chunk
                     Layout[i, j] = 2;
                     spawnPoint.x = i;
                     spawnPoint.y = j;
+                } else if (Layout[i, j] == 0 && isSpawn && enemySpawnPoint.x >= size && enemySpawnPoint.y >= size && Random.value <= 0.5 && i > 0) {
+                    Layout[i, j] = 3;
+                    enemySpawnPoint.x = i;
+                    enemySpawnPoint.y = j;
                 }
             }
         }

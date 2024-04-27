@@ -8,8 +8,8 @@ public class PatrolState : SuperState
         lookAroundState = new LookAroundState(entity,subStateMachine);
         marchState = new MarchState(entity,subStateMachine);
 
-        lookAroundState.AddTransition(new PatrolMarchTransition(entity));
-        marchState.AddTransition(new PatrolLookAroundTransition(entity));
+        lookAroundState.AddTransition(new PatrolMarchTransition(entity, this));
+        marchState.AddTransition(new PatrolLookAroundTransition(entity, this));
     }
 
     protected override State GetInitialState()
