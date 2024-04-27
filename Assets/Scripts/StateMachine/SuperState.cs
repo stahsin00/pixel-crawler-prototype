@@ -1,6 +1,6 @@
 public abstract class SuperState : State
 {
-    protected StateMachine subStateMachine;
+    public StateMachine subStateMachine;
 
     protected SuperState(Entity entity, StateMachine stateMachine) : base(entity, stateMachine)
     {
@@ -10,6 +10,7 @@ public abstract class SuperState : State
     public override void Enter()
     {
         base.Enter();
+        subStateMachine.Initialize(GetInitialState());
         subStateMachine.CurrentState.Enter();
     }
 
@@ -27,9 +28,11 @@ public abstract class SuperState : State
 
     public override void Exit()
     {
-        base.Exit();
         subStateMachine.CurrentState.Exit();
+        base.Exit();
     }
+
+    protected abstract State GetInitialState();
 
     public void ChangeSubState(State nextSubState)
     {
