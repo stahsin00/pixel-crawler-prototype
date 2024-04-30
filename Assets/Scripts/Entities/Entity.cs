@@ -2,11 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class Entity : MonoBehaviour
+public abstract class Entity : MonoBehaviour, IDamageable
 {
     // Components
     public Movement movement;
     public CollisionSenses collisionSenses;
+    public Combat combat;
 
     // State
     public StateMachine stateMachine;
@@ -23,6 +24,7 @@ public abstract class Entity : MonoBehaviour
     {
         movement = GetComponent<Movement>();
         collisionSenses = GetComponent<CollisionSenses>();
+        combat = GetComponent<Combat>();
 
         stateMachine = new StateMachine();
 
@@ -39,5 +41,10 @@ public abstract class Entity : MonoBehaviour
     private void FixedUpdate()
     {
         stateMachine.CurrentState.FixedUpdate();
+    }
+
+    public void Damage(float amount)
+    {
+        combat.Damage(amount);
     }
 }
