@@ -19,6 +19,6 @@ public class StateMachine
         CurrentState.Enter();
 
         // TODO : remove temp
-        Debug.Log(CurrentState.GetType().Name);
+        //Debug.Log(CurrentState.GetType().Name);
     }
 }

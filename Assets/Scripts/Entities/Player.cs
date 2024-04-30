@@ -3,6 +3,7 @@ public class Player : Entity
     public InputHandler inputHandler;
 
     public PlayerJumpState jumpState;
+    public PlayerAttackState attackState;
 
     protected override void Awake()
     {
@@ -11,6 +12,7 @@ public class Player : Entity
         inputHandler = GetComponent<InputHandler>();
 
         jumpState = new PlayerJumpState(this, stateMachine);
+        attackState = new PlayerAttackState(this, stateMachine, attackPos);
 
         idleState.AddTransition(new PlayerIdleTransition(this));
         walkState.AddTransition(new PlayerMoveTransition(this));
@@ -19,6 +21,9 @@ public class Player : Entity
         PlayerJumpTransition playerJumpTransition= new PlayerJumpTransition(this);
         idleState.AddTransition(playerJumpTransition);
         walkState.AddTransition(playerJumpTransition);
+
+        idleState.AddTransition(new PlayerAttackTransition(this));
+        attackState.AddTransition(new PlayerFinishAttackTransition(this));
     }
 
     void Start()

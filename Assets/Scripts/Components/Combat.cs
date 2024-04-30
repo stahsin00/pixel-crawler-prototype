@@ -11,5 +11,10 @@ public class Combat : MonoBehaviour
 
     public void Damage(float amount) {
         currentHealth -= amount;
+        if (currentHealth <= 0) { Die(); }
+    }
+
+    private void Die() {
+        Debug.Log("Died.");
     }
 }

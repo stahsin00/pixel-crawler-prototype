@@ -20,6 +20,8 @@ public abstract class Entity : MonoBehaviour, IDamageable
     // Stats
     public float speed;
 
+    public GameObject attackPos;
+
     protected virtual void Awake()
     {
         movement = GetComponent<Movement>();
@@ -45,6 +47,7 @@ public abstract class Entity : MonoBehaviour, IDamageable
 
     public void Damage(float amount)
     {
+        Debug.Log("Damage: " + amount);
         combat.Damage(amount);
     }
 }
