@@ -60,6 +60,12 @@ public class WorldController : MonoBehaviour
                     enemyInstance = Instantiate(enemy, new Vector3(x + tilemap.cellSize.x / 2, y + tilemap.cellSize.y / 2, 0), Quaternion.identity);
                 }
             }
+
+            tilemap.SetTile(new Vector3Int(x, -1, 0), tile);
+            tilemap.SetTile(new Vector3Int(x, CurrentRoom.size * CurrentRoom.chunkSize - 1, 0), tile);
+
+            tilemap.SetTile(new Vector3Int(-1, x, 0), tile);
+            tilemap.SetTile(new Vector3Int(CurrentRoom.size * CurrentRoom.chunkSize - 1, x, 0), tile);
         }
 
         // TODO: temp
