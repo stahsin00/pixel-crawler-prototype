@@ -22,4 +22,9 @@ public class Enemy : Entity
         speed = 5f;
         stateMachine.Initialize(idleState);
     }
+
+    public override void DoDamage()
+    {
+        throw new System.NotImplementedException();
+    }
 }

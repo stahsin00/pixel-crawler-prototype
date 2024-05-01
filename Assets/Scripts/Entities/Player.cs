@@ -1,3 +1,6 @@
+using System.Collections.Generic;
+using UnityEngine;
+
 public class Player : Entity
 {
     public InputHandler inputHandler;
@@ -31,5 +34,16 @@ public class Player : Entity
         // TODO : temp
         speed = 10f;
         stateMachine.Initialize(idleState);
+    }
+
+    public override void DoDamage()
+    {
+        Collider2D[] hits = Physics2D.OverlapCircleAll(attackPos.transform.position, 0.5f, whatIsDamageable);
+        foreach (Collider2D collision in hits) {
+            IDamageable damageable = collision.GetComponent<IDamageable>();
+            if (damageable != null) {
+                damageable.Damage(attack);
+            }
+        }
     }
 }

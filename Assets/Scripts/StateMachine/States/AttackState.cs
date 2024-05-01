@@ -2,7 +2,6 @@ using UnityEngine;
 
 public class AttackState : State
 {
-    float attack = 1f;
     GameObject attackPos;
 
     public AttackState(Entity entity, StateMachine stateMachine, GameObject attackPos) : base(entity, stateMachine)
@@ -14,13 +13,12 @@ public class AttackState : State
     {
         base.Enter();
 
-        Debug.Log("Attack");
         attackPos.SetActive(true);
     }
 
     public override void Exit()
     {
-        // TODO
+        entity.DoDamage();
         attackPos.SetActive(false);
 
         base.Exit();

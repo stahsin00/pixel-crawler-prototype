@@ -48,7 +48,7 @@ GameObject:
   - component: {fileID: 6955595260578534904}
   - component: {fileID: 7575436623316119502}
   - component: {fileID: 8845892824942784376}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: enemy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -210,9 +210,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   movement: {fileID: 7120725628623483817}
   collisionSenses: {fileID: 6955595260578534904}
-  combat: {fileID: 0}
+  combat: {fileID: 8845892824942784376}
   speed: 5
   attackPos: {fileID: 8239315135046845346}
+  whatIsDamageable:
+    serializedVersion: 2
+    m_Bits: 128
   aISenses: {fileID: 7575436623316119502}
 --- !u!114 &7120725628623483817
 MonoBehaviour:

@@ -19,8 +19,10 @@ public abstract class Entity : MonoBehaviour, IDamageable
 
     // Stats
     public float speed;
+    protected float attack = 1f;
 
     public GameObject attackPos;
+    public LayerMask whatIsDamageable;
 
     protected virtual void Awake()
     {
@@ -44,6 +46,8 @@ public abstract class Entity : MonoBehaviour, IDamageable
     {
         stateMachine.CurrentState.FixedUpdate();
     }
+
+    public abstract void DoDamage();
 
     public void Damage(float amount)
     {
