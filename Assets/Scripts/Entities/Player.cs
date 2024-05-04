@@ -4,6 +4,7 @@ using UnityEngine;
 public class Player : Entity
 {
     public InputHandler inputHandler;
+    public ProjectileSpawner projectileSpawner;
 
     public PlayerJumpState jumpState;
     public PlayerAttackState attackState;
@@ -13,6 +14,7 @@ public class Player : Entity
         base.Awake();
 
         inputHandler = GetComponent<InputHandler>();
+        projectileSpawner = GetComponent<ProjectileSpawner>();
 
         jumpState = new PlayerJumpState(this, stateMachine);
         attackState = new PlayerAttackState(this, stateMachine, attackPos);

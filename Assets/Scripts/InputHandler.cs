@@ -1,7 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
+// TODO
 public class InputHandler : MonoBehaviour
 {
     Player player;
@@ -22,6 +21,7 @@ public class InputHandler : MonoBehaviour
 
     private void HandleInput()
     {
+        // TODO : lol
         if (Input.GetKeyDown(KeyCode.Space))
         {
             JumpInput = true;
@@ -30,7 +30,11 @@ public class InputHandler : MonoBehaviour
         {
             AttackInput = true;
             return;
-        } 
+        } else if (Input.GetKeyDown(KeyCode.R)) {
+            player.projectileSpawner.ToggleRandom();
+        } else if (Input.GetKeyDown(KeyCode.F)) {
+            player.projectileSpawner.Fire();
+        }
 
         InputX = Input.GetAxisRaw("Horizontal");
         player.movement.Flip(InputX);
