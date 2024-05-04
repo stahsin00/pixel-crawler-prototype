@@ -342,6 +342,7 @@ GameObject:
   - component: {fileID: 848620534}
   - component: {fileID: 848620533}
   - component: {fileID: 848620536}
+  - component: {fileID: 848620537}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -393,6 +394,19 @@ MonoBehaviour:
   tile: {fileID: 11400000, guid: ba8d99ad2d6060842865d1fee4093dea, type: 2}
   player: {fileID: 5372785631058680091, guid: 4c363df9684caa64eb261a458e66aab2, type: 3}
   enemy: {fileID: 5794370919113955096, guid: 94c2d9ab6bd5edc44ae182d280741c84, type: 3}
+--- !u!114 &848620537
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 848620532}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 63384a2496da66a4faa04264c3cd74f9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  projectile: {fileID: 1362425132672018564, guid: 2fd4121ba9e87654a8cdbc258fd9b120, type: 3}
 --- !u!1 &1119756567
 GameObject:
   m_ObjectHideFlags: 0
