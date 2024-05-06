@@ -12,7 +12,7 @@ public class Region
     private Dictionary<Vector2Int, Room> rooms;
 
     private int size;
-    private int roomSize;
+    private int roomSize = 4;
 
     private Vector2Int entrance;
     private List<Vector2Int> entrances;
@@ -170,14 +170,11 @@ public class Region
             int nextY = room.RegionY + move.Item2;
 
             if (isValidMove(nextX, nextY, true) && RoomMap[nextX,nextY] > 0) {
-                Debug.Log($"room: ({room.RegionX},{room.RegionY})");
-                Debug.Log($"neighbor: ({nextX},{nextY})");
                 Room neighbor = rooms[new Vector2Int(nextX,nextY)];
 
                 int offset = Random.Range(0, roomSize);
 
                 (int row, int col, int rowNeighbor, int colNeighbor) = CalculateCoordinates(room, neighbor, offset);
-                Debug.Log($"row: {row}, col: {col}, rowNeighbor: {rowNeighbor}, colNeighbor: {colNeighbor}");
 
                 if (room.Type < neighbor.Type) {
 
