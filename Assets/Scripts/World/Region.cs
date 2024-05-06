@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+// TODO: duplicate code
 public class Region
 {
     public int Type { get; private set; }
@@ -11,6 +12,7 @@ public class Region
     private Dictionary<Vector2Int, Room> rooms;
 
     private int size;
+    private int roomSize;
 
     private Vector2Int entrance;
     private List<Vector2Int> entrances;
@@ -64,7 +66,10 @@ public class Region
 
     private void AddRoom(int x, int y, int type = 2) {
         RoomMap[x, y] = type;
-        rooms[new Vector2Int(x, y)] = new Room();
+
+        Room room = new Room(type);
+        rooms[new Vector2Int(x, y)] = room;
+        MakeConnections(room);
     }
 
     public void Initialize()
@@ -148,6 +153,49 @@ public class Region
         }
 
         AddRoom(source.x,source.y,isEntrance ? 1 : 8);
+    }
+
+    private void MakeConnections(Room room) {
+        (int, int)[] moves = { (-1, 0), (1, 0), (0, -1), (0, 1) };
+
+        foreach ((int, int)move in moves) {
+            int nextX = room.RegionX + move.Item1;
+            int nextY = room.RegionY + move.Item2;
+
+            if (isValidMove(nextX, nextY, true) && RoomMap[nextX,nextY] > 0) {
+                Room neighbor = rooms[new Vector2Int(nextX,nextY)];
+
+                int offset = Random.Range(0, roomSize);
+
+                (int row, int col, int rowNeighbor, int colNeighbor) = CalculateCoordinates(room, neighbor, offset);
+
+                if (room.Type < neighbor.Type) {
+
+                    room.AddExit(new Vector2Int(row, col));
+                    neighbor.AddEntrance(new Vector2Int(rowNeighbor, colNeighbor));
+
+                } else {
+
+                    room.AddEntrance(new Vector2Int(row, col));
+                    neighbor.AddExit(new Vector2Int(rowNeighbor, colNeighbor));
+
+                }
+            }
+        }
+    }
+
+    private (int row, int col, int rowNeighbor, int colNeighbor) CalculateCoordinates(Room room, Room neighbor, int offset) {
+        if (room.RegionX == neighbor.RegionX) {
+
+            int col = (room.RegionY < neighbor.RegionY) ? roomSize - 1 : 0;
+            return (offset, col, offset, roomSize - 1 - col);
+
+        } else {
+
+            int row = (room.RegionX < neighbor.RegionX) ? roomSize - 1 : 0;
+            return (row, offset, roomSize - 1 - row, offset);
+
+        }
     }
 
     private void InitializeRooms() {

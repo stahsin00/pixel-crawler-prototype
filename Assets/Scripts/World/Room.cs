@@ -4,10 +4,14 @@ using UnityEngine;
 
 public class Room
 {
+    public int Type { get; private set; }
     public int size = 4;
     public int chunkSize = 5;
     public int[,] chunkMap;
     public Chunk[,] chunks;
+
+    public int RegionX { get; private set; }
+    public int RegionY { get; private set; }
 
     private Vector2Int entrance;
     private List<Vector2Int> entrances;
@@ -35,6 +39,14 @@ public class Room
         exits.Add(e3);
 
         Initialize();
+    }
+
+    public void AddEntrance(Vector2Int position) {
+        // TODO
+    }
+
+    public void AddExit(Vector2Int position) {
+        // TODO
     }
 
     public void Initialize() {
