@@ -21,9 +21,12 @@ public class Room
 
     private bool spawn;
 
-    public Room(int type = 2, bool spawn = false) {
+    public Room(int x, int y, int type = 2, bool spawn = false) {
         chunkMap = new int[size,size];
         chunks = new Chunk[size,size];
+
+        RegionX = x;
+        RegionY = y;
 
         Discovered = true;
 
@@ -37,8 +40,6 @@ public class Room
 
         entrances = new List<Vector2Int>();
         exits = new List<Vector2Int>();
-
-        Initialize();
     }
 
     public void AddEntrance(Vector2Int position) {
@@ -54,7 +55,16 @@ public class Room
     }
 
     public void Initialize() {
-        SetRoom(entrance.x, entrance.y);
+        Debug.Log($"Initilizing Room ({RegionX},{RegionY})");
+        Debug.Log($"Entrance: ({entrance.x},{entrance.y})");
+        Debug.Log($"Entrances: {entrances.Count}");
+        Debug.Log($"Exits: {exits.Count}");
+
+        if (entrance.x < size && entrance.y < size) {
+            SetRoom(entrance.x, entrance.y);
+        } else {
+            SetRoom(exits[0].x, exits[0].y);
+        }
 
         foreach (Vector2Int e in entrances) {
             FindPath(e);

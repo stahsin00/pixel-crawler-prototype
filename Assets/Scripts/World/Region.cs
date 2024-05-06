@@ -41,12 +41,17 @@ public class Region
 
         if (main) {
             entrance = new Vector2Int(0,0);
+            AddRoom(0,0,1,true);
         } else {
             entrance = new Vector2Int(size,size);
         }
         
         exits = new List<Vector2Int>();
         entrances = new List<Vector2Int>();
+    }
+
+    public Room GetRoom(int x, int y) {
+        return rooms[new Vector2Int(x,y)];
     }
 
     public void AddEntrance(Vector2Int entrance)
@@ -64,10 +69,10 @@ public class Region
         exits.Add(exit);
     }
 
-    private void AddRoom(int x, int y, int type = 2) {
+    private void AddRoom(int x, int y, int type = 2, bool spawn = false) {
         RoomMap[x, y] = type;
 
-        Room room = new Room(type);
+        Room room = new Room(x, y, type, spawn);
         rooms[new Vector2Int(x, y)] = room;
         MakeConnections(room);
     }
@@ -165,11 +170,14 @@ public class Region
             int nextY = room.RegionY + move.Item2;
 
             if (isValidMove(nextX, nextY, true) && RoomMap[nextX,nextY] > 0) {
+                Debug.Log($"room: ({room.RegionX},{room.RegionY})");
+                Debug.Log($"neighbor: ({nextX},{nextY})");
                 Room neighbor = rooms[new Vector2Int(nextX,nextY)];
 
                 int offset = Random.Range(0, roomSize);
 
                 (int row, int col, int rowNeighbor, int colNeighbor) = CalculateCoordinates(room, neighbor, offset);
+                Debug.Log($"row: {row}, col: {col}, rowNeighbor: {rowNeighbor}, colNeighbor: {colNeighbor}");
 
                 if (room.Type < neighbor.Type) {
 

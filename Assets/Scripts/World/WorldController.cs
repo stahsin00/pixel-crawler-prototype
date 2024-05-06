@@ -78,7 +78,7 @@ public class WorldController : MonoBehaviour
         }
 
         // TODO: temp
-        CurrentRoom = new Room();
-        RenderRoom();
+        //CurrentRoom = CurrentWorld.GetSpawn();
+        //RenderRoom();
     }
 }

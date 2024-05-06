@@ -139,6 +139,10 @@ public class World
         }
     }
 
+    public Room GetSpawn() {
+        // TODO
+        return regions[0].GetRoom(0,0);
+    }
 
     private void InitializeRegions() {
         for (int i = 0; i < regions.Length; i++) {
