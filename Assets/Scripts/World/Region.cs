@@ -8,6 +8,7 @@ public class Region
     public int WorldY { get; private set; }
 
     public int[,] RoomMap { get; private set; }
+    private Dictionary<Vector2Int, Room> rooms;
 
     private int size;
 
@@ -31,6 +32,7 @@ public class Region
         this.size = size;
 
         RoomMap = new int[size, size];
+        rooms = new Dictionary<Vector2Int, Room>();
 
         this.collectibles = collectibles;
         this.healthBoosts = healthBoosts;
@@ -51,13 +53,18 @@ public class Region
             entrances.Add(entrance);
         } else {
             this.entrance = entrance;
-            RoomMap[entrance.x, entrance.y] = 1;
+            AddRoom(entrance.x, entrance.y, 1);
         }
     }
 
     public void AddExit(Vector2Int exit)
     {
         exits.Add(exit);
+    }
+
+    private void AddRoom(int x, int y, int type = 2) {
+        RoomMap[x, y] = type;
+        rooms[new Vector2Int(x, y)] = new Room();
     }
 
     public void Initialize()
@@ -117,7 +124,7 @@ public class Region
 
             bool found = MakePathDFS(nextX, nextY, visited, dist-1);
             if (found) {
-                RoomMap[x,y] = mainPath[mainPath.Length-dist];
+                AddRoom(x,y,mainPath[mainPath.Length-dist]);
                 return true;
             }
         }
@@ -137,9 +144,17 @@ public class Region
 
         foreach (Vector2Int position in path)
         {
-            RoomMap[position.x,position.y] = 2;
+            AddRoom(position.x,position.y);
         }
 
-        RoomMap[source.x,source.y] = isEntrance ? 1 : 8;
+        AddRoom(source.x,source.y,isEntrance ? 1 : 8);
+    }
+
+    private void InitializeRooms() {
+        foreach (Room room in rooms.Values) {
+
+            room.Initialize();
+
+        }
     }
 }

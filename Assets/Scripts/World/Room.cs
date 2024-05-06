@@ -15,7 +15,7 @@ public class Room
 
     public bool Discovered { get; private set; }
 
-    public Room() {
+    public Room(int type = 2) {
         chunkMap = new int[size,size];
         chunks = new Chunk[size,size];
 
