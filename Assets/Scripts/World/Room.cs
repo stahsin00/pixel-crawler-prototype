@@ -19,34 +19,38 @@ public class Room
 
     public bool Discovered { get; private set; }
 
-    public Room(int type = 2) {
+    private bool spawn;
+
+    public Room(int type = 2, bool spawn = false) {
         chunkMap = new int[size,size];
         chunks = new Chunk[size,size];
 
         Discovered = true;
 
-        // temp
-        Vector2Int e1 = new Vector2Int(0,2);
-        Vector2Int e2 = new Vector2Int(3,1);
-        Vector2Int e3 = new Vector2Int(2,3);
+        this.spawn = spawn;
 
-        entrance = e1;
+        if (spawn) {
+            entrance = new Vector2Int(Random.Range(0,size),Random.Range(0,size));
+        } else {
+            entrance = new Vector2Int(size,size);
+        }
 
         entrances = new List<Vector2Int>();
         exits = new List<Vector2Int>();
-
-        entrances.Add(e2);
-        exits.Add(e3);
 
         Initialize();
     }
 
     public void AddEntrance(Vector2Int position) {
-        // TODO
+        if (entrance.x < size && entrance.y < size) {
+            entrances.Add(position);
+        } else {
+            entrance = position;
+        }
     }
 
     public void AddExit(Vector2Int position) {
-        // TODO
+        exits.Add(position);
     }
 
     public void Initialize() {
@@ -60,7 +64,7 @@ public class Room
             FindPath(e);
         }
 
-        chunks[entrance.x,entrance.y].SetSpawn();
+        if (spawn) {chunks[entrance.x,entrance.y].SetSpawn();}
 
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {

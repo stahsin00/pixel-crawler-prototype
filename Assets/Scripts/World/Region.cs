@@ -95,6 +95,8 @@ public class Region
         {
             // TODO
         }
+
+        InitializeRooms();
     }
 
     private void MakePath()
