@@ -37,9 +37,7 @@ public class Room
         this.spawn = spawn;
 
         if (spawn) {
-            //Debug.Log("wtf");
             entrance = new Vector2Int(Random.Range(0,size),Random.Range(0,size));
-            //Debug.Log($"spawn is at ({entrance.x},{entrance.y})");
             AddChunk(entrance.x,entrance.y);
         } else {
             entrance = new Vector2Int(size,size);
@@ -50,6 +48,7 @@ public class Room
     }
 
     private void AddChunk(int x, int y) {
+        if (chunkMap[x,y] > 0) return;
         chunkMap[x,y] = 1;
         chunks[x,y] = new Chunk(chunkSize);
         chunks[x,y].SetType(1);
@@ -61,19 +60,13 @@ public class Room
         } else {
             entrance = position;
         }
-        AddChunk(position.x,position.y);
     }
 
     public void AddExit(Vector2Int position) {
         exits.Add(position);
-        AddChunk(position.x,position.y);
     }
 
     public void Initialize() {
-        Debug.Log($"Initilizing Room {Type} at ({RegionX},{RegionY}) which is{(spawn ? "" : " not")} the spawn.");
-        Debug.Log($"Entrance: ({entrance.x},{entrance.y})");
-        Debug.Log($"Entrances: {entrances.Count}");
-        Debug.Log($"Exits: {exits.Count}");
 
         if (entrance.x < size && entrance.y < size) {
             SetRoom(entrance.x, entrance.y);
@@ -94,7 +87,6 @@ public class Room
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
                 if (chunks[i,j] != null) {
-                    Debug.Log($"Initilizing chunk at ({i},{j})");
                     chunks[i,j].Initialize();
                 }
             }
@@ -128,7 +120,6 @@ public class Room
 
     private void FindPath(Vector2Int source) 
     {
-        
         List<Vector2Int> path = Utility.FindPath(size, source, isValidMove, (int x, int y) => { return chunkMap[x, y] > 0; });
 
         foreach (Vector2Int position in path)

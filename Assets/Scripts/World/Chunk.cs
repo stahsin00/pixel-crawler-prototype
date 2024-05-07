@@ -35,7 +35,6 @@ public class Chunk
     }
 
     public void Initialize() {
-        Debug.Log($"Initializing chunk of type {type}");
         template = WorldController.Instance.TemplateManager.GetRandomChunkTemplate(type);
 
         // TODO
