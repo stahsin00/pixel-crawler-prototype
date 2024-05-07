@@ -26,6 +26,7 @@ public class Chunk
     }
 
     public void SetSpawn() {
+        //Debug.Log("im gonna cry");
         isSpawn = true;
     }
 
@@ -34,6 +35,7 @@ public class Chunk
     }
 
     public void Initialize() {
+        Debug.Log($"Initializing chunk of type {type}");
         template = WorldController.Instance.TemplateManager.GetRandomChunkTemplate(type);
 
         // TODO

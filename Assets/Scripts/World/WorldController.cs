@@ -40,8 +40,6 @@ public class WorldController : MonoBehaviour
             instance = this;
             DontDestroyOnLoad(gameObject);
 
-            CurrentWorld = new World();
-
             TemplateManager = new ChunkTemplateManager();
             StartCoroutine(WaitForTemplates());
         }
@@ -78,7 +76,8 @@ public class WorldController : MonoBehaviour
         }
 
         // TODO: temp
-        //CurrentRoom = CurrentWorld.GetSpawn();
-        //RenderRoom();
+        CurrentWorld = new World();
+        CurrentRoom = CurrentWorld.GetSpawn();
+        RenderRoom();
     }
 }

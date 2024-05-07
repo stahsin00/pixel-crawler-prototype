@@ -1,5 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Room
@@ -25,6 +27,8 @@ public class Room
         chunkMap = new int[size,size];
         chunks = new Chunk[size,size];
 
+        Type = type;
+
         RegionX = x;
         RegionY = y;
 
@@ -33,7 +37,10 @@ public class Room
         this.spawn = spawn;
 
         if (spawn) {
+            //Debug.Log("wtf");
             entrance = new Vector2Int(Random.Range(0,size),Random.Range(0,size));
+            //Debug.Log($"spawn is at ({entrance.x},{entrance.y})");
+            AddChunk(entrance.x,entrance.y);
         } else {
             entrance = new Vector2Int(size,size);
         }
@@ -42,20 +49,28 @@ public class Room
         exits = new List<Vector2Int>();
     }
 
+    private void AddChunk(int x, int y) {
+        chunkMap[x,y] = 1;
+        chunks[x,y] = new Chunk(chunkSize);
+        chunks[x,y].SetType(1);
+    }
+
     public void AddEntrance(Vector2Int position) {
         if (entrance.x < size && entrance.y < size) {
             entrances.Add(position);
         } else {
             entrance = position;
         }
+        AddChunk(position.x,position.y);
     }
 
     public void AddExit(Vector2Int position) {
         exits.Add(position);
+        AddChunk(position.x,position.y);
     }
 
     public void Initialize() {
-        Debug.Log($"Initilizing Room ({RegionX},{RegionY})");
+        Debug.Log($"Initilizing Room {Type} at ({RegionX},{RegionY}) which is{(spawn ? "" : " not")} the spawn.");
         Debug.Log($"Entrance: ({entrance.x},{entrance.y})");
         Debug.Log($"Entrances: {entrances.Count}");
         Debug.Log($"Exits: {exits.Count}");
@@ -79,6 +94,7 @@ public class Room
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
                 if (chunks[i,j] != null) {
+                    Debug.Log($"Initilizing chunk at ({i},{j})");
                     chunks[i,j].Initialize();
                 }
             }
@@ -86,9 +102,7 @@ public class Room
     }
 
     private void SetRoom(int x, int y) {
-        chunkMap[x,y] = 1;
-        chunks[x,y] = new Chunk(chunkSize);
-        chunks[x,y].SetType(1);
+        AddChunk(x,y);
 
         if (isValidMove(x,y-1,true) && chunkMap[x,y-1] > 0) {
             chunkMap[x,y-1] = chunkMap[x,y-1] == 3 ? 4 : 2;
@@ -99,8 +113,8 @@ public class Room
         }
 
         if (isValidMove(x,y+1,true) && chunkMap[x,y+1] > 0) {
-            chunkMap[x,y+1] = chunkMap[x,y-1] == 2 ? 4 : 3;
-            chunks[x,y+1].SetType(chunkMap[x,y-1]);
+            chunkMap[x,y+1] = chunkMap[x,y+1] == 2 ? 4 : 3;
+            chunks[x,y+1].SetType(chunkMap[x,y+1]);
 
             chunkMap[x,y] = chunkMap[x,y] == 3 ? 4 : 2;
             chunks[x,y].SetType(chunkMap[x,y]);

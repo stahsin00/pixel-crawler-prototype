@@ -39,7 +39,8 @@ public class Region
         this.collectibles = collectibles;
         this.healthBoosts = healthBoosts;
 
-        if (main) {
+        if (type == 1) {
+            //Debug.Log("plz");
             entrance = new Vector2Int(0,0);
             AddRoom(0,0,1,true);
         } else {
@@ -70,6 +71,7 @@ public class Region
     }
 
     private void AddRoom(int x, int y, int type = 2, bool spawn = false) {
+        if (RoomMap[x, y] > 0) return;
         RoomMap[x, y] = type;
 
         Room room = new Room(x, y, type, spawn);
@@ -206,6 +208,7 @@ public class Region
     }
 
     private void InitializeRooms() {
+        //Debug.Log($"Initializing region {Type}");
         foreach (Room room in rooms.Values) {
 
             room.Initialize();
