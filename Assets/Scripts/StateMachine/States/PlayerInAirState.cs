@@ -1,18 +1,10 @@
 using UnityEngine;
 
-public class PlayerJumpState : JumpState
+public class PlayerInAirState : InAirState
 {
-    public PlayerJumpState(Entity entity, StateMachine stateMachine) : base(entity, stateMachine)
+    public PlayerInAirState(Player player, StateMachine stateMachine) : base(player, stateMachine)
     {
     }
-
-    public override void Enter()
-	{
-		base.Enter();
-
-		Player player = entity as Player;
-        player.inputHandler.UseJumpInput();
-	}
 
     public override void Update()
     {

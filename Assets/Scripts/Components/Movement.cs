@@ -9,6 +9,9 @@ public class Movement : MonoBehaviour
     int facingDirection = 1;
     public Vector2 currentVelocity;
 
+    public bool CanMove { get; set;} = true;
+    public bool CanJump { get; set;} = true;
+
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
