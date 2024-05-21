@@ -152,11 +152,14 @@ public class World
                 adjacent = regions[RegionMap[room.RoomRegion.WorldX+x, room.RoomRegion.WorldY]];
                 return adjacent.GetRoom(adjacent.Size-1,room.RegionY);
             } else if (room.RegionX + x >= room.RoomRegion.Size) {
-                adjacent = regions[0];
+                adjacent = regions[RegionMap[room.RoomRegion.WorldX+x, room.RoomRegion.WorldY]];
+                return adjacent.GetRoom(0,room.RegionY);
             } else if (room.RegionY + y < 0) {
-                adjacent = regions[0];
+                adjacent = regions[RegionMap[room.RoomRegion.WorldX, room.RoomRegion.WorldY+y]];
+                return adjacent.GetRoom(room.RegionX,adjacent.Size-1);
             } else {
-                adjacent = regions[0];
+                adjacent = regions[RegionMap[room.RoomRegion.WorldX, room.RoomRegion.WorldY+y]];
+                return adjacent.GetRoom(room.RegionX,0);
             }     
         }
 

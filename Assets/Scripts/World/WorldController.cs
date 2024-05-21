@@ -84,7 +84,6 @@ public class WorldController : MonoBehaviour
 
     private void Update() {
         if (!isChangingRoom && (playerInstance.transform.position.x < 0 || playerInstance.transform.position.x > CurrentRoom.size * CurrentRoom.chunkSize - 1 || playerInstance.transform.position.y < 0 || playerInstance.transform.position.y > CurrentRoom.size * CurrentRoom.chunkSize - 1)) {
-            Debug.Log("change room");
             isChangingRoom = true;
             TriggerRoomChange();
         }
@@ -101,6 +100,8 @@ public class WorldController : MonoBehaviour
             enemyInstances.Remove(enemyInstance);
             Destroy(enemyInstance);
         }
+
+        Debug.Log($"Region: ({CurrentRoom.RegionX},{CurrentRoom.RegionY}); World: ({CurrentRoom.RoomRegion.WorldX},{CurrentRoom.RoomRegion.WorldY})");
 
         // TODO: will fix later
         if (playerInstance.transform.position.x < 0) {
@@ -121,7 +122,7 @@ public class WorldController : MonoBehaviour
             playerInstance.transform.position = new Vector2(playerInstance.transform.position.x, 0);
         }
 
-        Debug.Log($"player position: ({playerInstance.transform.position.x},{playerInstance.transform.position.y})");
+        Debug.Log($"Region: ({CurrentRoom.RegionX},{CurrentRoom.RegionY}); World: ({CurrentRoom.RoomRegion.WorldX},{CurrentRoom.RoomRegion.WorldY})");
         isChangingRoom = false;
     }
 }
