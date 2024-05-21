@@ -144,6 +144,25 @@ public class World
         return regions[0].GetRoom(0,0);
     }
 
+    public Room GetAdjacentRoom(Room room, int x, int y) {
+        if (room.RegionX + x < 0 || room.RegionX + x >= room.RoomRegion.Size || room.RegionY + y < 0 || room.RegionY + y >= room.RoomRegion.Size) {
+            Region adjacent;
+
+            if (room.RegionX + x < 0) {
+                adjacent = regions[RegionMap[room.RoomRegion.WorldX+x, room.RoomRegion.WorldY]];
+                return adjacent.GetRoom(adjacent.Size-1,room.RegionY);
+            } else if (room.RegionX + x >= room.RoomRegion.Size) {
+                adjacent = regions[0];
+            } else if (room.RegionY + y < 0) {
+                adjacent = regions[0];
+            } else {
+                adjacent = regions[0];
+            }     
+        }
+
+        return room.RoomRegion.GetRoom(room.RegionX + x, room.RegionY + y);
+    }
+
     private void InitializeRegions() {
         for (int i = 0; i < regions.Length; i++) {
 

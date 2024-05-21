@@ -15,6 +15,8 @@ public class Room
     public int RegionX { get; private set; }
     public int RegionY { get; private set; }
 
+    public Region RoomRegion { get; private set; }
+
     private Vector2Int entrance;
     private List<Vector2Int> entrances;
     private List<Vector2Int> exits;
@@ -23,9 +25,11 @@ public class Room
 
     private bool spawn;
 
-    public Room(int x, int y, int type = 2, bool spawn = false) {
+    public Room(int x, int y, Region region, int type = 2, bool spawn = false) {
         chunkMap = new int[size,size];
         chunks = new Chunk[size,size];
+
+        RoomRegion = region;
 
         Type = type;
 

@@ -11,7 +11,7 @@ public class Region
     public int[,] RoomMap { get; private set; }
     private Dictionary<Vector2Int, Room> rooms;
 
-    private int size;
+    public int Size {get; private set; }
     private int roomSize = 4;
 
     private Vector2Int entrance;
@@ -31,7 +31,7 @@ public class Region
         WorldX = worldX;
         WorldY = worldY;
 
-        this.size = size;
+        this.Size = size;
 
         RoomMap = new int[size, size];
         rooms = new Dictionary<Vector2Int, Room>();
@@ -57,7 +57,7 @@ public class Region
 
     public void AddEntrance(Vector2Int entrance)
     {
-        if (this.entrance.x < size && this.entrance.y < size) {
+        if (this.entrance.x < Size && this.entrance.y < Size) {
             entrances.Add(entrance);
         } else {
             this.entrance = entrance;
@@ -74,7 +74,7 @@ public class Region
         if (RoomMap[x, y] > 0) return;
         RoomMap[x, y] = type;
 
-        Room room = new Room(x, y, type, spawn);
+        Room room = new Room(x, y, this, type, spawn);
         rooms[new Vector2Int(x, y)] = room;
         MakeConnections(room);
     }
@@ -108,7 +108,7 @@ public class Region
 
     private void MakePath()
     {
-        bool[,] visited = new bool[size, size];
+        bool[,] visited = new bool[Size, Size];
         MakePathDFS(entrance.x,entrance.y,visited,mainPath.Length);
 
     }
@@ -149,12 +149,12 @@ public class Region
 
     private bool isValidMove(int x, int y, bool inclusive = false)
     {
-        return (x >= 0) && (x < size) && (y >= 0) && (y < size) && (inclusive || RoomMap[x, y] == 0);
+        return (x >= 0) && (x < Size) && (y >= 0) && (y < Size) && (inclusive || RoomMap[x, y] == 0);
     }
 
     private void FindPath(Vector2Int source, bool isEntrance = false) 
     {
-        List<Vector2Int> path = Utility.FindPath(size, source, isValidMove, (int x, int y) => { return RoomMap[x, y] > 0; });
+        List<Vector2Int> path = Utility.FindPath(Size, source, isValidMove, (int x, int y) => { return RoomMap[x, y] > 0; });
 
         foreach (Vector2Int position in path)
         {

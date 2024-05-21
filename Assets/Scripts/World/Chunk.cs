@@ -14,8 +14,8 @@ public class Chunk
 
     public int[,] Layout { get; private set; }
 
-    public Chunk(int size, bool spawn = false) {
-        type = 0;
+    public Chunk(int size, bool spawn = false, int type = 0) {
+        this.type = type;
         this.size = size;
 
         isSpawn = spawn;

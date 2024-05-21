@@ -12,7 +12,7 @@ public class WorldController : MonoBehaviour
     private GameObject playerInstance;
 
     public GameObject enemy;
-    private GameObject enemyInstance;
+    private List<GameObject> enemyInstances = new List<GameObject>();
 
     private static WorldController instance;
     public static WorldController Instance { get { return instance; } }
@@ -23,6 +23,7 @@ public class WorldController : MonoBehaviour
     public ChunkTemplateManager TemplateManager { get; private set; }
 
     public bool isLoading {get; private set; } = true;
+    private bool isChangingRoom = false;
 
     public GameObject GetPlayer() {
         return playerInstance;
@@ -55,15 +56,15 @@ public class WorldController : MonoBehaviour
                 } else if (CurrentRoom[x,y] == 2) {
                     playerInstance = Instantiate(player, new Vector3(x + tilemap.cellSize.x / 2, y + tilemap.cellSize.y / 2, 0), Quaternion.identity);
                 } else if (CurrentRoom[x,y] == 3) {
-                    enemyInstance = Instantiate(enemy, new Vector3(x + tilemap.cellSize.x / 2, y + tilemap.cellSize.y / 2, 0), Quaternion.identity);
+                    enemyInstances.Add(Instantiate(enemy, new Vector3(x + tilemap.cellSize.x / 2, y + tilemap.cellSize.y / 2, 0), Quaternion.identity));
                 }
             }
 
-            tilemap.SetTile(new Vector3Int(x, -1, 0), tile);
-            tilemap.SetTile(new Vector3Int(x, CurrentRoom.size * CurrentRoom.chunkSize - 1, 0), tile);
+            //tilemap.SetTile(new Vector3Int(x, -1, 0), tile);
+            //tilemap.SetTile(new Vector3Int(x, CurrentRoom.size * CurrentRoom.chunkSize - 1, 0), tile);
 
-            tilemap.SetTile(new Vector3Int(-1, x, 0), tile);
-            tilemap.SetTile(new Vector3Int(CurrentRoom.size * CurrentRoom.chunkSize - 1, x, 0), tile);
+            //tilemap.SetTile(new Vector3Int(-1, x, 0), tile);
+            //tilemap.SetTile(new Vector3Int(CurrentRoom.size * CurrentRoom.chunkSize - 1, x, 0), tile);
         }
 
         // TODO: temp
@@ -79,5 +80,48 @@ public class WorldController : MonoBehaviour
         CurrentWorld = new World();
         CurrentRoom = CurrentWorld.GetSpawn();
         RenderRoom();
+    }
+
+    private void Update() {
+        if (!isChangingRoom && (playerInstance.transform.position.x < 0 || playerInstance.transform.position.x > CurrentRoom.size * CurrentRoom.chunkSize - 1 || playerInstance.transform.position.y < 0 || playerInstance.transform.position.y > CurrentRoom.size * CurrentRoom.chunkSize - 1)) {
+            Debug.Log("change room");
+            isChangingRoom = true;
+            TriggerRoomChange();
+        }
+    }
+
+    private void TriggerRoomChange() {
+        List<GameObject> enemiesToRemove = new List<GameObject>();
+
+        foreach (GameObject enemyInstance in enemyInstances) {
+            enemiesToRemove.Add(enemyInstance);
+        }
+
+        foreach (GameObject enemyInstance in enemiesToRemove) {
+            enemyInstances.Remove(enemyInstance);
+            Destroy(enemyInstance);
+        }
+
+        // TODO: will fix later
+        if (playerInstance.transform.position.x < 0) {
+            CurrentRoom = CurrentWorld.GetAdjacentRoom(CurrentRoom,-1,0);
+            RenderRoom();
+            playerInstance.transform.position = new Vector2(CurrentRoom.size * CurrentRoom.chunkSize - 1, playerInstance.transform.position.y);
+        } else if (playerInstance.transform.position.x > CurrentRoom.size * CurrentRoom.chunkSize - 1) {
+            CurrentRoom = CurrentWorld.GetAdjacentRoom(CurrentRoom,1,0);
+            RenderRoom();
+            playerInstance.transform.position = new Vector2(0, playerInstance.transform.position.y);
+        } else if (playerInstance.transform.position.y < 0) {
+            CurrentRoom = CurrentWorld.GetAdjacentRoom(CurrentRoom,0,-1);
+            RenderRoom();
+            playerInstance.transform.position = new Vector2(playerInstance.transform.position.x, CurrentRoom.size * CurrentRoom.chunkSize - 1);
+        } else {
+            CurrentRoom = CurrentWorld.GetAdjacentRoom(CurrentRoom,0,1);
+            RenderRoom();
+            playerInstance.transform.position = new Vector2(playerInstance.transform.position.x, 0);
+        }
+
+        Debug.Log($"player position: ({playerInstance.transform.position.x},{playerInstance.transform.position.y})");
+        isChangingRoom = false;
     }
 }
