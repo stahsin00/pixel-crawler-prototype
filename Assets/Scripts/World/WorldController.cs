@@ -79,13 +79,78 @@ public class WorldController : MonoBehaviour
         // TODO: temp
         CurrentWorld = new World();
         CurrentRoom = CurrentWorld.GetSpawn();
-        RenderRoom();
+        //RenderRoom();
+        Render();
+    }
+
+    // TODO: Temp
+    private void Render() {
+
+        for (int i = 0; i < CurrentWorld.Size; i++) {
+            for (int j = 0; j < CurrentWorld.Size; j++) {
+                if (CurrentWorld.RegionMap[i,j] > 0) {
+                    Region CurrentRegion = CurrentWorld.GetRegion(CurrentWorld.RegionMap[i,j]);
+                    for (int k = 0; k < CurrentRegion.Size; k++) {
+                        for (int l = 0; l < CurrentRegion.Size; l++) {
+                            if (CurrentRegion.RoomMap[k,l] > 0) {
+                                Room CurrentRoom = CurrentRegion.GetRoom(k,l);
+                                for (int x = 0; x < CurrentRoom.size * CurrentRoom.chunkSize - 1; x++)
+                                {
+                                    for (int y = 0; y < CurrentRoom.size * CurrentRoom.chunkSize - 1; y++)
+                                    {
+                                        if (CurrentRoom[x,y] == 1) {
+                                            Vector3Int tilePosition = new Vector3Int((i * CurrentRegion.Size * CurrentRoom.size * 5) + (k * CurrentRoom.size * 5) + x - (i*CurrentRoom.size) - k, 
+                                                                                     (j * CurrentRegion.Size * CurrentRoom.size * 5) + (l * CurrentRoom.size * 5) + y - (j*CurrentRoom.size) - l, 
+                                                                                      0);
+                                            tilemap.SetTile(tilePosition, tile);
+                                            TileBase tileGO = tilemap.GetTile(tilePosition);
+                                            if (tileGO == null) Debug.Log("wtf");
+                                            tilemap.SetTileFlags(tilePosition, TileFlags.None);
+
+                                            int region = CurrentRegion.RegionType;
+                                            switch (region) {
+                                                case 1:
+                                                    tilemap.SetColor(tilePosition, Color.green);
+                                                    break;
+                                                case 2:
+                                                    tilemap.SetColor(tilePosition, Color.blue);
+                                                    break;
+                                                case 3:
+                                                    tilemap.SetColor(tilePosition, Color.red);
+                                                    break;
+                                                default:
+                                                    tilemap.SetColor(tilePosition, Color.yellow);
+                                                    break;
+                                            }
+                                        } else if (CurrentRoom[x,y] == 2) {
+                                            playerInstance = Instantiate(player, 
+                                                                         new Vector3((i * CurrentRegion.Size * CurrentRoom.size * 5) + (k * CurrentRoom.size * 5) + x + tilemap.cellSize.x / 2, 
+                                                                                     (j * CurrentRegion.Size * CurrentRoom.size * 5) + (l * CurrentRoom.size * 5) + y + tilemap.cellSize.y / 2, 0), 
+                                                                                      Quaternion.identity);
+                                        } else if (CurrentRoom[x,y] == 3) {
+                                            enemyInstances.Add(Instantiate(enemy, 
+                                                                           new Vector3((i * CurrentRegion.Size * CurrentRoom.size * 5) + (k * CurrentRoom.size * 5) + x + tilemap.cellSize.x / 2, 
+                                                                                       (j * CurrentRegion.Size * CurrentRoom.size * 5) + (l * CurrentRoom.size * 5) + y + tilemap.cellSize.y / 2, 0), 
+                                                                                        Quaternion.identity));
+                                        }
+                                    }
+                                }
+
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        // TODO: temp
+        isLoading = false;
     }
 
     private void Update() {
-        if (!isChangingRoom && (playerInstance.transform.position.x < 0 || playerInstance.transform.position.x > CurrentRoom.size * CurrentRoom.chunkSize - 1 || playerInstance.transform.position.y < 0 || playerInstance.transform.position.y > CurrentRoom.size * CurrentRoom.chunkSize - 1)) {
+        if (!isLoading && !isChangingRoom && (playerInstance.transform.position.x < 0 || playerInstance.transform.position.x > CurrentRoom.size * CurrentRoom.chunkSize - 1 || playerInstance.transform.position.y < 0 || playerInstance.transform.position.y > CurrentRoom.size * CurrentRoom.chunkSize - 1)) {
             isChangingRoom = true;
-            TriggerRoomChange();
+            //TriggerRoomChange();
         }
     }
 

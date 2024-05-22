@@ -4,15 +4,15 @@ using UnityEngine;
 // TODO: duplicate code
 public class Region
 {
-    public int Type { get; private set; }
+    public int RegionType { get; private set; }
     public int WorldX { get; private set; }
     public int WorldY { get; private set; }
 
     public int[,] RoomMap { get; private set; }
     private Dictionary<Vector2Int, Room> rooms;
 
-    public int Size {get; private set; }
-    private int roomSize = 4;
+    public int Size {get; private set; } = 4;
+    public int RoomSize {get; private set;} = 4;
 
     private Vector2Int entrance;
     private List<Vector2Int> entrances;
@@ -26,7 +26,7 @@ public class Region
 
     public Region(int type, int worldX, int worldY, int size, bool main = false, int collectibles = 0, int healthBoosts = 0)
     {
-        Type = type;
+        RegionType = type;
         
         WorldX = worldX;
         WorldY = worldY;
@@ -174,7 +174,7 @@ public class Region
             if (isValidMove(nextX, nextY, true) && RoomMap[nextX,nextY] > 0) {
                 Room neighbor = rooms[new Vector2Int(nextX,nextY)];
 
-                int offset = Random.Range(0, roomSize);
+                int offset = Random.Range(0, RoomSize);
 
                 (int row, int col, int rowNeighbor, int colNeighbor) = CalculateCoordinates(room, neighbor, offset);
 
@@ -196,13 +196,13 @@ public class Region
     private (int row, int col, int rowNeighbor, int colNeighbor) CalculateCoordinates(Room room, Room neighbor, int offset) {
         if (room.RegionX == neighbor.RegionX) {
 
-            int col = (room.RegionY < neighbor.RegionY) ? roomSize - 1 : 0;
-            return (offset, col, offset, roomSize - 1 - col);
+            int col = (room.RegionY < neighbor.RegionY) ? RoomSize - 1 : 0;
+            return (offset, col, offset, RoomSize - 1 - col);
 
         } else {
 
-            int row = (room.RegionX < neighbor.RegionX) ? roomSize - 1 : 0;
-            return (row, offset, roomSize - 1 - row, offset);
+            int row = (room.RegionX < neighbor.RegionX) ? RoomSize - 1 : 0;
+            return (row, offset, RoomSize - 1 - row, offset);
 
         }
     }

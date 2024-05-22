@@ -36,8 +36,8 @@ public class World
     }
 
     private void SetRegion(int x, int y, Region region) {
-        RegionMap[x, y] = region.Type;
-        regions[region.Type-1] = region;
+        RegionMap[x, y] = region.RegionType;
+        regions[region.RegionType-1] = region;
         MakeConnections(region);
     }
 
@@ -110,7 +110,7 @@ public class World
 
                 (int row, int col, int rowNeighbor, int colNeighbor) = CalculateCoordinates(region, neighbor, offset);
 
-                if (region.Type < neighbor.Type) {
+                if (region.RegionType < neighbor.RegionType) {
 
                     region.AddExit(new Vector2Int(row, col));
                     neighbor.AddEntrance(new Vector2Int(rowNeighbor, colNeighbor));
