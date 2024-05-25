@@ -110,15 +110,16 @@ public class World
 
                 (int row, int col, int rowNeighbor, int colNeighbor) = CalculateCoordinates(region, neighbor, offset);
 
+                // TODO: temp chunk connection
                 if (region.RegionType < neighbor.RegionType) {
 
-                    region.AddExit(new Vector2Int(row, col));
-                    neighbor.AddEntrance(new Vector2Int(rowNeighbor, colNeighbor));
+                    region.AddExit(new Vector2Int(row, col),new Vector2Int(row, col));
+                    neighbor.AddEntrance(new Vector2Int(rowNeighbor, colNeighbor),new Vector2Int(rowNeighbor, colNeighbor));
 
                 } else {
 
-                    region.AddEntrance(new Vector2Int(row, col));
-                    neighbor.AddExit(new Vector2Int(rowNeighbor, colNeighbor));
+                    region.AddEntrance(new Vector2Int(row, col),new Vector2Int(row, col));
+                    neighbor.AddExit(new Vector2Int(rowNeighbor, colNeighbor),new Vector2Int(rowNeighbor, colNeighbor));
 
                 }
             }

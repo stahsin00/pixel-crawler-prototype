@@ -124,13 +124,13 @@ public class WorldController : MonoBehaviour
                                             }
                                         } else if (CurrentRoom[x,y] == 2) {
                                             playerInstance = Instantiate(player, 
-                                                                         new Vector3((i * CurrentRegion.Size * CurrentRoom.size * 5) + (k * CurrentRoom.size * 5) + x + tilemap.cellSize.x / 2, 
-                                                                                     (j * CurrentRegion.Size * CurrentRoom.size * 5) + (l * CurrentRoom.size * 5) + y + tilemap.cellSize.y / 2, 0), 
+                                                                         new Vector3((i * CurrentRegion.Size * CurrentRoom.size * 5) + (k * CurrentRoom.size * 5) + x + tilemap.cellSize.x / 2 - (i*CurrentRoom.size) - k, 
+                                                                                     (j * CurrentRegion.Size * CurrentRoom.size * 5) + (l * CurrentRoom.size * 5) + y + tilemap.cellSize.y / 2 - (j*CurrentRoom.size) - l, 0), 
                                                                                       Quaternion.identity);
                                         } else if (CurrentRoom[x,y] == 3) {
                                             enemyInstances.Add(Instantiate(enemy, 
-                                                                           new Vector3((i * CurrentRegion.Size * CurrentRoom.size * 5) + (k * CurrentRoom.size * 5) + x + tilemap.cellSize.x / 2, 
-                                                                                       (j * CurrentRegion.Size * CurrentRoom.size * 5) + (l * CurrentRoom.size * 5) + y + tilemap.cellSize.y / 2, 0), 
+                                                                           new Vector3((i * CurrentRegion.Size * CurrentRoom.size * 5) + (k * CurrentRoom.size * 5) + x + tilemap.cellSize.x / 2 - (i*CurrentRoom.size) - k, 
+                                                                                       (j * CurrentRegion.Size * CurrentRoom.size * 5) + (l * CurrentRoom.size * 5) + y + tilemap.cellSize.y / 2 - (j*CurrentRoom.size) - l, 0), 
                                                                                         Quaternion.identity));
                                         }
                                     }

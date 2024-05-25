@@ -14,9 +14,9 @@ public class Region
     public int Size {get; private set; } = 4;
     public int RoomSize {get; private set;} = 4;
 
-    private Vector2Int entrance;
-    private List<Vector2Int> entrances;
-    private List<Vector2Int> exits;
+    private Vector2Int[] entrance;
+    private List<Vector2Int[]> entrances;
+    private List<Vector2Int[]> exits;
 
     // TODO
     public int collectibles;
@@ -31,7 +31,7 @@ public class Region
         WorldX = worldX;
         WorldY = worldY;
 
-        this.Size = size;
+        Size = size;
 
         RoomMap = new int[size, size];
         rooms = new Dictionary<Vector2Int, Room>();
@@ -40,34 +40,33 @@ public class Region
         this.healthBoosts = healthBoosts;
 
         if (type == 1) {
-            //Debug.Log("plz");
-            entrance = new Vector2Int(0,0);
+            entrance = new Vector2Int[] {new Vector2Int(0,0),new Vector2Int(0,0)};
             AddRoom(0,0,1,true);
         } else {
-            entrance = new Vector2Int(size,size);
+            entrance = new Vector2Int[] {new Vector2Int(size,size), new Vector2Int(size,size)};
         }
         
-        exits = new List<Vector2Int>();
-        entrances = new List<Vector2Int>();
+        exits = new List<Vector2Int[]>();
+        entrances = new List<Vector2Int[]>();
     }
 
     public Room GetRoom(int x, int y) {
         return rooms[new Vector2Int(x,y)];
     }
 
-    public void AddEntrance(Vector2Int entrance)
+    public void AddEntrance(Vector2Int entrance, Vector2Int chunkEntrance)
     {
-        if (this.entrance.x < Size && this.entrance.y < Size) {
-            entrances.Add(entrance);
+        if (this.entrance[0].x < Size && this.entrance[0].y < Size) {
+            entrances.Add(new Vector2Int[] {entrance,chunkEntrance});
         } else {
-            this.entrance = entrance;
+            this.entrance = new Vector2Int[] {entrance,chunkEntrance};
             AddRoom(entrance.x, entrance.y, 1);
         }
     }
 
-    public void AddExit(Vector2Int exit)
+    public void AddExit(Vector2Int exit, Vector2Int chunkExit)
     {
-        exits.Add(exit);
+        exits.Add(new Vector2Int[] {exit,chunkExit});
     }
 
     private void AddRoom(int x, int y, int type = 2, bool spawn = false) {
@@ -82,15 +81,21 @@ public class Region
     public void Initialize()
     {
         MakePath();
+        Room room = GetRoom(entrance[0].x,entrance[0].y);
+        room.AddEntrance(entrance[1]);
 
-        foreach (Vector2Int entrance in entrances)
+        foreach (Vector2Int[] entrance in entrances)
         {
-            FindPath(entrance, true);
+            FindPath(entrance[0], true);
+            room = GetRoom(entrance[0].x,entrance[0].y);
+            room.AddEntrance(entrance[1]);
         }
 
-        foreach (Vector2Int exit in exits)
+        foreach (Vector2Int[] exit in exits)
         {
-            FindPath(exit);
+            FindPath(exit[0]);
+            room = GetRoom(exit[0].x,exit[0].y);
+            room.AddExit(exit[1]);
         }
 
         for (int i = 0; i < collectibles; i++)
@@ -109,7 +114,7 @@ public class Region
     private void MakePath()
     {
         bool[,] visited = new bool[Size, Size];
-        MakePathDFS(entrance.x,entrance.y,visited,mainPath.Length);
+        MakePathDFS(entrance[0].x,entrance[0].y,visited,mainPath.Length);
 
     }
 
@@ -208,11 +213,8 @@ public class Region
     }
 
     private void InitializeRooms() {
-        //Debug.Log($"Initializing region {Type}");
         foreach (Room room in rooms.Values) {
-
             room.Initialize();
-
         }
     }
 }

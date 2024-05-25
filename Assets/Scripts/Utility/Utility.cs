@@ -43,6 +43,10 @@ public static class Utility
             }
         }
 
+        if (!isDestination(cur.x, cur.y)) {
+            Debug.Log("no path found");
+        }
+
         List<Vector2Int> path = new List<Vector2Int>();
 
         while (cur != source)
