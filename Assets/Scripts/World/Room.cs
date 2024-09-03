@@ -51,7 +51,7 @@ public class Room
     private void AddChunk(int x, int y) {
         if (chunkMap[x,y] > 0) return;
         chunkMap[x,y] = 1;
-        chunks[x,y] = new Chunk(chunkSize);
+        chunks[x,y] = new Chunk(this, chunkSize, x, y);
         chunks[x,y].SetType(1);
     }
 
@@ -85,6 +85,16 @@ public class Room
 
         if (spawn) {chunks[entrance.x,entrance.y].SetSpawn();}
 
+        // for (int i = 0; i < size; i++) {
+        //     for (int j = 0; j < size; j++) {
+        //         if (chunks[i,j] != null) {
+        //             chunks[i,j].Initialize();
+        //         }
+        //     }
+        // }
+    }
+
+    public void InitializeChunks() {
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
                 if (chunks[i,j] != null) {

@@ -9,10 +9,13 @@ public class Region
     public int WorldY { get; private set; }
 
     public int[,] RoomMap { get; private set; }
+    public Room[,] Map { get; private set; }
     private Dictionary<Vector2Int, Room> rooms;
 
     public int Size {get; private set; } = 4;
     public int RoomSize {get; private set;} = 4;
+
+    public World World {get; private set; }
 
     private Vector2Int[] entrance;
     private List<Vector2Int[]> entrances;
@@ -24,8 +27,9 @@ public class Region
 
     private int[] mainPath = { 1, 2, 2, 3, 2, 4, 5, 6, 7 };
 
-    public Region(int type, int worldX, int worldY, int size, bool main = false, int collectibles = 0, int healthBoosts = 0)
+    public Region(World world, int type, int worldX, int worldY, int size, bool main = false, int collectibles = 0, int healthBoosts = 0)
     {
+        this.World = world;
         RegionType = type;
         
         WorldX = worldX;
@@ -34,6 +38,7 @@ public class Region
         Size = size;
 
         RoomMap = new int[size, size];
+        Map = new Room[size, size];
         rooms = new Dictionary<Vector2Int, Room>();
 
         this.collectibles = collectibles;
@@ -74,6 +79,7 @@ public class Region
         RoomMap[x, y] = type;
 
         Room room = new Room(x, y, this, type, spawn);
+        Map[x,y] = room;
         rooms[new Vector2Int(x, y)] = room;
         MakeConnections(room);
     }
@@ -215,6 +221,12 @@ public class Region
     private void InitializeRooms() {
         foreach (Room room in rooms.Values) {
             room.Initialize();
+        }
+    }
+
+    public void InitializeChunks() {
+        foreach (Room room in rooms.Values) {
+            room.InitializeChunks();
         }
     }
 }

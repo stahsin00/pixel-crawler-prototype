@@ -94,13 +94,13 @@ public class WorldController : MonoBehaviour
                         for (int l = 0; l < CurrentRegion.Size; l++) {
                             if (CurrentRegion.RoomMap[k,l] > 0) {
                                 Room CurrentRoom = CurrentRegion.GetRoom(k,l);
-                                for (int x = 0; x < CurrentRoom.size * CurrentRoom.chunkSize - 1; x++)
+                                for (int x = 0; x < CurrentRoom.size * CurrentRoom.chunkSize; x++)
                                 {
-                                    for (int y = 0; y < CurrentRoom.size * CurrentRoom.chunkSize - 1; y++)
+                                    for (int y = 0; y < CurrentRoom.size * CurrentRoom.chunkSize; y++)
                                     {
                                         if (CurrentRoom[x,y] == 1) {
-                                            Vector3Int tilePosition = new Vector3Int((i * CurrentRegion.Size * CurrentRoom.size * 5) + (k * CurrentRoom.size * 5) + x - (i*CurrentRoom.size) - k, 
-                                                                                     (j * CurrentRegion.Size * CurrentRoom.size * 5) + (l * CurrentRoom.size * 5) + y - (j*CurrentRoom.size) - l, 
+                                            Vector3Int tilePosition = new Vector3Int((i * CurrentRegion.Size * CurrentRoom.size * 5) + (k * CurrentRoom.size * 5) + x,// - (i*CurrentRoom.size) - k, 
+                                                                                     (j * CurrentRegion.Size * CurrentRoom.size * 5) + (l * CurrentRoom.size * 5) + y,// - (j*CurrentRoom.size) - l, 
                                                                                       0);
                                             tilemap.SetTile(tilePosition, tile);
                                             TileBase tileGO = tilemap.GetTile(tilePosition);

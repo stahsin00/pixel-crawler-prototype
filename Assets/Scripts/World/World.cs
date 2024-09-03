@@ -27,6 +27,7 @@ public class World
         
         PlaceRegions();
         InitializeRegions();
+        InitializeChunks();
 
     }
 
@@ -50,7 +51,7 @@ public class World
         int x = 0;
         int y = Random.Range(0, Size);
 
-        SetRegion(x,y,new Region(1,x,y,RegionSize,true));
+        SetRegion(x,y,new Region(this, 1,x,y,RegionSize,true));
 
         PlaceRegion(2);
         PlaceRegion(3);
@@ -80,7 +81,7 @@ public class World
                 int y = choice.WorldY + move.Item2;
 
                 if (isValidMove(x, y)) {
-                    SetRegion(x,y,new Region(regionNum,x,y,RegionSize));
+                    SetRegion(x,y,new Region(this, regionNum,x,y,RegionSize));
                     placed = true;
                     break;
                 }
@@ -175,6 +176,18 @@ public class World
             }
 
             regions[i].Initialize();
+
+        }
+    }
+
+    private void InitializeChunks() {
+        for (int i = 0; i < regions.Length; i++) {
+
+            if (regions[i] == null) {
+                return;
+            }
+
+            regions[i].InitializeChunks();
 
         }
     }
