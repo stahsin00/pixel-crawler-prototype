@@ -1,6 +1,7 @@
 using System.IO;
 using UnityEngine;
 using UnityEngine.UI;
+using PixelCrawler.World;
 
 public class MapRenderer : MonoBehaviour
 {
